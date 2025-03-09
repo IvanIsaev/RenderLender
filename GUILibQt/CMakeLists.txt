@@ -39,7 +39,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} $
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES} ${MOC_SRCS} ${UI_HEADERS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt::Core Qt::Gui Qt::Widgets)
-target_link_libraries(${PROJECT_NAME} PUBLIC GUIlibInterface)
+target_link_libraries(${PROJECT_NAME} PUBLIC IGUIlib)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
