@@ -4,4 +4,4 @@ project(RenderLender VERSION 1.0 DESCRIPTION "Library for rendering" LANGUAGES C
 
 add_subdirectory(GUIlibInterface)
 add_subdirectory(GUILibRealizationQt)
-add_subdirectory(RenderLender)
+add_subdirectory(RenderLenderApp)
