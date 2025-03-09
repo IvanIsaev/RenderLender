@@ -1,11 +1,13 @@
-#include "CMainWindow.h"
-#include <QtWidgets/QApplication>
+#include <CApplicationFactory.h>
+#include <CInterfaceFactory.h>
 
 
-int main(int argc, char *argv[])
+int main ( int argc, char* argv [ ] )
 {
-    QApplication a(argc, argv);
-    CMainWindow w;
-    w.show();
-    return a.exec();
+	auto pApplication = CApplicationFactory::create ( argc, argv );
+	auto pInterface = CInterfaceFactory::create ( );
+
+	pInterface->show ( );
+
+	return pApplication->execute ( );
 }

@@ -1,5 +1,6 @@
 #include "CMainWindow.h"
 
+
 CMainWindow::CMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -8,3 +9,8 @@ CMainWindow::CMainWindow(QWidget *parent)
 
 CMainWindow::~CMainWindow()
 {}
+
+void CMainWindow::show ( )
+{
+    QMainWindow::show ( );
+}
