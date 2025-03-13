@@ -21,9 +21,7 @@ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT
 
 set(MOC_HEADERS ${PRIVATE_HEADER_DIRECTORY}/CApplication.h ${PRIVATE_HEADER_DIRECTORY}/CMainWindow.h)
 
-set(SOURCES ${MOC_HEADERS}
-${PUBLIC_HEADER_DIRECTORY}/CApplicationFactory.h ${PUBLIC_HEADER_DIRECTORY}/CInterfaceFactory.h
-src/CApplication.cpp src/CApplicationFactory.cpp src/CInterfaceFactory.cpp src/CMainWindow.cpp)
+set(SOURCES src/CApplication.cpp src/CApplicationFactory.cpp src/CInterfaceFactory.cpp src/CMainWindow.cpp)
 
 set(UIS ui/CMainWindow.ui)
 
