@@ -10,8 +10,8 @@ class CApplication : public QApplication, public IApplication
     Q_OBJECT
 
 public:
-    CApplication ( int, char*[] );
-    ~CApplication ();
+    explicit CApplication ( int, char*[] );
+    ~CApplication () = default;
 
     // Inherited via IApplication
     bool execute ( ) override;

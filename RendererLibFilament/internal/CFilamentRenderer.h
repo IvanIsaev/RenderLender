@@ -6,5 +6,6 @@
 class CFilamentRenderer : public IRenderer
 {
 public:
+	CFilamentRenderer ( );
 	bool execute ( ) override;
 };

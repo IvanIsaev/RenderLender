@@ -7,9 +7,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     ui.setupUi(this);
 }
 
-CMainWindow::~CMainWindow()
-{}
-
 void CMainWindow::show ( )
 {
     QMainWindow::show ( );

@@ -5,6 +5,10 @@
 
 using namespace filament;
 
+CFilamentRenderer::CFilamentRenderer ( )
+{
+}
+
 bool CFilamentRenderer::execute ( )
 {
     Engine::Config engineConfig = {};

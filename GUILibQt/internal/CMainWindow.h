@@ -11,8 +11,8 @@ class CMainWindow : public QMainWindow, public IInterface
     Q_OBJECT
 
 public:
-    CMainWindow(QWidget *parent = nullptr);
-    ~CMainWindow();
+    explicit CMainWindow(QWidget *parent = nullptr);
+    ~CMainWindow() = default;
 
     // Inherited via IInterface
     void show ( ) override;
