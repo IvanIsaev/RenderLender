@@ -41,19 +41,19 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC IRandererLib)
 
-set(FILAMENT_LIBRARIES_LIST abseil.lib backend.lib basis_transcoder.lib bluegl.lib camutils.lib civetweb.lib dracodec.lib
-                            filabridge.lib filaflat.lib filamat.lib filament.lib filament-iblprefilter.lib filameshio.lib 
-                            geometry.lib gltfio.lib gltfio_core.lib ibl.lib ibl-lite.lib image.lib ktxreader.lib matdbg.lib 
-                            meshoptimizer.lib mikktspace.lib shaders.lib smol-v.lib stb.lib uberarchive.lib uberzlib.lib 
+set(FILAMENT_LIBRARIES_LIST abseil.lib backend.lib basis_transcoder.lib bluevk.lib camutils.lib civetweb.lib dracodec.lib
+                            filabridge.lib filaflat.lib filamat.lib filament.lib filament-iblprefilter.lib filameshio.lib
+                            geometry.lib gltfio.lib gltfio_core.lib ibl.lib ibl-lite.lib image.lib ktxreader.lib matdbg.lib
+                            meshoptimizer.lib mikktspace.lib shaders.lib smol-v.lib stb.lib uberarchive.lib uberzlib.lib
                             utils.lib viewer.lib vkshaders.lib zstd.lib)
 
 foreach(LIB IN LISTS FILAMENT_LIBRARIES_LIST)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${FILAMENT_LIBS_PATH}/${LIB})
 endforeach()
 
-include(FindOpenGl)
-find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
+include(FindVulkan)
+find_package(Vulkan REQUIRED COMPONENTS shaderc_combined)
+target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0)
