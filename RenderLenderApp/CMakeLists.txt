@@ -4,7 +4,9 @@ project(RenderLenderApp VERSION 1.0 DESCRIPTION "Graphical wrapper for RenderLen
 
 add_executable(${PROJECT_NAME})
 
-target_sources(${PROJECT_NAME} PRIVATE main.cpp)
+set(ROOT_SRC src)
+
+target_sources(${PROJECT_NAME} PRIVATE ${ROOT_SRC}/main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GUILib)
 target_link_libraries(${PROJECT_NAME} PRIVATE RendererLib)

@@ -12,6 +12,7 @@ string(TOUPPER ${EXPORT_MACROS} EXPORT_MACROS)
 
 set(PRIVATE_HEADER_DIRECTORY internal)
 set(PUBLIC_HEADER_DIRECTORY include)
+set(ROOT_SRC src)
 
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME}
@@ -19,9 +20,13 @@ generate_export_header(${PROJECT_NAME}
          EXPORT_FILE_NAME ${EXPORT_FILE})
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HEADER_DIRECTORY})
 
-set(MOC_HEADERS ${PRIVATE_HEADER_DIRECTORY}/CApplication.h ${PRIVATE_HEADER_DIRECTORY}/CMainWindow.h)
+set(MOC_HEADERS ${PRIVATE_HEADER_DIRECTORY}/CApplication.h 
+                ${PRIVATE_HEADER_DIRECTORY}/CMainWindow.h)
 
-set(SOURCES src/CApplication.cpp src/CApplicationFactory.cpp src/CInterfaceFactory.cpp src/CMainWindow.cpp)
+set(SOURCES ${ROOT_SRC}/CApplication.cpp
+            ${ROOT_SRC}/CApplicationFactory.cpp 
+            ${ROOT_SRC}/CInterfaceFactory.cpp 
+            ${ROOT_SRC}/CMainWindow.cpp)
 
 set(UIS ui/CMainWindow.ui)
 

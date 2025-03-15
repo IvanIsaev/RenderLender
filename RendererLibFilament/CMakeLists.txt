@@ -12,6 +12,7 @@ string(TOUPPER ${EXPORT_MACROS} EXPORT_MACROS)
 
 set(PRIVATE_HEADER_DIRECTORY internal)
 set(PUBLIC_HEADER_DIRECTORY include)
+set(ROOT_SRC src)
 
 set(FILAMENT_INCLUDE_PATH $ENV{FILAMENT_INCLUDE_PATH})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -30,7 +31,8 @@ generate_export_header(${PROJECT_NAME}
          EXPORT_FILE_NAME ${EXPORT_FILE})
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HEADER_DIRECTORY})
 
-set(SOURCES src/CFilamentRenderer.cpp src/CFilamentRendererFactory.cpp)
+set(SOURCES ${ROOT_SRC}/CFilamentRenderer.cpp
+            ${ROOT_SRC}/CFilamentRendererFactory.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} 
