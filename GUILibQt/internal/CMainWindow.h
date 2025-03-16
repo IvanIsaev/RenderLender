@@ -1,10 +1,13 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <IInterface.h>
+
+#include "CRenderArea.h"
 
 #include <ui_CMainWindow.h>
 
-#include <IInterface.h>
+#include <QtWidgets/QMainWindow>
+
 
 class CMainWindow : public QMainWindow, public IInterface
 {
@@ -15,8 +18,13 @@ public:
     ~CMainWindow() = default;
 
     // Inherited via IInterface
+    void init ( ) override;
     void show ( ) override;
+
+    IRenderArea* renderArea ( ) override;
 
 private:
     Ui::CMainWindowClass ui;
+
+    CRenderArea* m_renderArea;
 };
