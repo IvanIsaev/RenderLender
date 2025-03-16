@@ -3,6 +3,7 @@
 class IApplication
 {
 public:
-	virtual ~IApplication ( ) = default;
-	virtual bool execute ( ) = 0;
+  virtual ~IApplication() = default;
+
+  virtual bool execute() = 0;
 };
