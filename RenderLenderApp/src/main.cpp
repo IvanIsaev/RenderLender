@@ -1,21 +1,30 @@
 #include <CApplicationFactory.h>
-#include <CInterfaceFactory.h>
 #include <CFilamentRendererFactory.h>
+#include <CInterfaceFactory.h>
 
+#include <IOperationCreatingRenderWindow.h>
 #include <IRenderArea.h>
+#include <IRenderWindow.h>
 
-int main ( int argc, char* argv [ ] )
+int
+main(int argc, char* argv[])
 {
-	auto pApplication = CApplicationFactory::create ( argc, argv );
-	auto pInterface = CInterfaceFactory::create ( );
-	auto pRenderer = CFilamentRendererFactory::create ( );
+  auto pApplication = CApplicationFactory::create(argc, argv);
+  auto pInterface = CInterfaceFactory::create();
+  auto pRenderer = CFilamentRendererFactory::create();
 
-	pInterface->init ( );
-	pInterface->show ( );
-	auto pRenderArea = pInterface->renderArea ( );
-	pRenderArea->addRenderWindow ( "Bla" );
+  pInterface->init();
+  pInterface->show();
+  auto pRenderArea = pInterface->renderArea();
+  auto pOperationForWindowCreating =
+    pRenderArea->operationForCreatingRenderWindow();
 
-	pRenderer->execute ( );
+  pOperationForWindowCreating->addRenderWindow("Filament render");
 
-	return pApplication->execute ( );
+  auto pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
+  auto id = pLastWindow->nativeWindow();
+
+  pRenderer->execute();
+
+  return pApplication->execute();
 }

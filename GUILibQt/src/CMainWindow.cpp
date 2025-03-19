@@ -2,31 +2,33 @@
 
 #include <QHBoxLayout>
 
-
-CMainWindow::CMainWindow(QWidget *parent)
-    : QMainWindow(parent),
-	m_renderArea ( nullptr )
+CMainWindow::CMainWindow(QWidget* parent)
+  : QMainWindow(parent)
+  , m_renderArea(nullptr)
 {
-    ui.setupUi(this);
+  ui.setupUi(this);
 }
 
-void CMainWindow::init ( )
+void
+CMainWindow::init()
 {
-    auto pCentralWidget = centralWidget ( );
+  auto pCentralWidget = centralWidget();
 
-    auto pHorizontalCentralLayout = new QHBoxLayout;
-    m_renderArea = new CRenderArea;
-    pHorizontalCentralLayout->addWidget ( m_renderArea );
+  auto pHorizontalCentralLayout = new QHBoxLayout;
+  m_renderArea = new CRenderArea;
+  pHorizontalCentralLayout->addWidget(m_renderArea);
 
-    pCentralWidget->setLayout ( pHorizontalCentralLayout );
+  pCentralWidget->setLayout(pHorizontalCentralLayout);
 }
 
-void CMainWindow::show ( )
+void
+CMainWindow::show()
 {
-    QMainWindow::show ( );
+  QMainWindow::show();
 }
 
-IRenderArea* CMainWindow::renderArea ( )
+IRenderArea*
+CMainWindow::renderArea()
 {
-    return m_renderArea;
+  return m_renderArea;
 }

@@ -6,9 +6,8 @@
 
 #include <memory>
 
-
 class GUILIB_EXPORT CInterfaceFactory
 {
 public:
-	static std::unique_ptr<IInterface> create ( );
+  static std::unique_ptr<IInterface> create();
 };

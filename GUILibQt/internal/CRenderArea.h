@@ -5,15 +5,15 @@
 #include <QtWidgets/QTabWidget>
 
 
-class CRenderArea : public QTabWidget, public IRenderArea
+class CRenderArea
+  : public QTabWidget
+  , public IRenderArea
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	void addRenderWindow ( std::string_view ) override;
-	IRenderWindow* renderWindow ( ) override;
+  std::unique_ptr<IOperationCreatingRenderWindow>
+  operationForCreatingRenderWindow() override;
 
 private:
-
-
 };

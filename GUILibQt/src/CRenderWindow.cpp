@@ -1,7 +1,6 @@
 #include <CRenderWindow.h>
 
-
 void* CRenderWindow::nativeWindow ( ) const
 {
-	return nullptr;
+	return reinterpret_cast<void*>(QWidget::winId());
 }

@@ -3,7 +3,7 @@
 class IRenderWindow
 {
 public:
-	virtual ~IRenderWindow ( ) = default;
+  virtual ~IRenderWindow() = default;
 
-	virtual void* nativeWindow ( ) const = 0;
+  virtual void* nativeWindow() const = 0;
 };

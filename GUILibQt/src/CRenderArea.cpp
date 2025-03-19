@@ -1,15 +1,9 @@
+#include <COperationCreatingRenderWindow.h>
 #include <CRenderArea.h>
-
 #include <CRenderWindow.h>
 
-
-void CRenderArea::addRenderWindow ( std::string_view title )
+std::unique_ptr<IOperationCreatingRenderWindow>
+CRenderArea::operationForCreatingRenderWindow()
 {
-	auto pRenderWindow = new CRenderWindow;
-	addTab ( pRenderWindow, QString(title.data()) );
-}
-
-IRenderWindow* CRenderArea::renderWindow ( )
-{
-	return nullptr;
+  return std::make_unique<COperationCreatingRenderWindow>(*this);
 }

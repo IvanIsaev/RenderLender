@@ -4,15 +4,16 @@
 
 #include <QtWidgets/QApplication>
 
-
-class CApplication : public QApplication, public IApplication
+class CApplication
+  : public QApplication
+  , public IApplication
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit CApplication ( int, char*[] );
-    ~CApplication () = default;
+  explicit CApplication(int, char*[]);
+  ~CApplication() = default;
 
-    // Inherited via IApplication
-    bool execute ( ) override;
+  // Inherited via IApplication
+  bool execute() override;
 };

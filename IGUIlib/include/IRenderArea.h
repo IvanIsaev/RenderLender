@@ -2,14 +2,15 @@
 
 #include <string_view>
 
+#include <memory>
 
-class IRenderWindow;
+class IOperationCreatingRenderWindow;
 
 class IRenderArea
 {
 public:
-	virtual ~IRenderArea ( ) = default;
+  virtual ~IRenderArea() = default;
 
-	virtual void addRenderWindow ( std::string_view ) = 0;
-	virtual IRenderWindow* renderWindow ( ) = 0;
+  virtual std::unique_ptr<IOperationCreatingRenderWindow>
+  operationForCreatingRenderWindow() = 0;
 };

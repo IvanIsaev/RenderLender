@@ -4,11 +4,12 @@
 
 #include <QWidget>
 
-
-class CRenderWindow : public QWidget, public IRenderWindow
+class CRenderWindow
+  : public QWidget
+  , public IRenderWindow
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	void* nativeWindow ( ) const override;
+  void* nativeWindow() const override;
 };

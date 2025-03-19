@@ -30,7 +30,9 @@ set(SOURCES ${ROOT_SRC}/CApplication.cpp
             ${ROOT_SRC}/CInterfaceFactory.cpp 
             ${ROOT_SRC}/CMainWindow.cpp
             ${ROOT_SRC}/CRenderArea.cpp
-            ${ROOT_SRC}/CRenderWindow.cpp)
+            ${ROOT_SRC}/CRenderWindow.cpp
+            ${ROOT_SRC}/COperationCreatingRenderWindow.cpp
+)
 
 set(UIS ui/CMainWindow.ui)
 

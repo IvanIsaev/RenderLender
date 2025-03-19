@@ -4,8 +4,6 @@
 
 #include "CMainWindow.h"
 
-
-std::unique_ptr<IInterface> CInterfaceFactory::create ( )
-{
-	return std::make_unique<CMainWindow> ( );
+std::unique_ptr<IInterface> CInterfaceFactory::create() {
+  return std::make_unique<CMainWindow>();
 }
