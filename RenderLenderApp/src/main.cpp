@@ -15,12 +15,12 @@ main(int argc, char* argv[])
 
   pInterface->init();
   pInterface->show();
+
   auto pRenderArea = pInterface->renderArea();
+
   auto pOperationForWindowCreating =
     pRenderArea->operationForCreatingRenderWindow();
-
-  pOperationForWindowCreating->addRenderWindow("Filament render");
-
+  pOperationForWindowCreating->addRenderWindow("Filament render", pRenderer->eventWindow());
   auto pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
   auto id = pLastWindow->nativeWindow();
 
