@@ -33,6 +33,7 @@
 #  define GUILIB_DEPRECATED_NO_EXPORT GUILIB_NO_EXPORT GUILIB_DEPRECATED
 #endif
 
+/* NOLINTNEXTLINE(readability-avoid-unconditional-preprocessor-if) */
 #if 0 /* DEFINE_NO_DEPRECATED */
 #  ifndef GUILIB_NO_DEPRECATED
 #    define GUILIB_NO_DEPRECATED
