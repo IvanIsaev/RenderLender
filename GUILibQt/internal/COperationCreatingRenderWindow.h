@@ -10,7 +10,7 @@ class COperationCreatingRenderWindow : public IOperationCreatingRenderWindow
 public:
   explicit COperationCreatingRenderWindow(QTabWidget&);
 
-  void addRenderWindow(std::string_view, IEventWindow& eventWindow) override;
+  void addRenderWindow(std::string_view) override;
   IRenderWindow* lastAddedRenderWindow() override;
 
 private:

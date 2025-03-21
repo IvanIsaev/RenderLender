@@ -18,11 +18,18 @@ main(int argc, char* argv[])
 
   auto pRenderArea = pInterface->renderArea();
 
-  auto pOperationForWindowCreating =
-    pRenderArea->operationForCreatingRenderWindow();
-  pOperationForWindowCreating->addRenderWindow("Filament render", pRenderer->eventWindow());
-  auto pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
-  auto id = pLastWindow->nativeWindow();
+  auto pLastWindow = static_cast<IRenderWindow*>(nullptr);
+
+  {
+    auto pOperationForWindowCreating =
+      pRenderArea->operationForCreatingRenderWindow();
+    pOperationForWindowCreating->addRenderWindow("Filament render");
+    pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
+  }
+  const auto ws = pLastWindow->size();
+  auto nw = pLastWindow->nativeWindow();
+
+  const auto config = IRenderer::Config{ .nativeWindow = nw, .windowSize = ws };
 
   pRenderer->execute();
 

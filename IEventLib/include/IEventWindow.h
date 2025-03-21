@@ -1,15 +1,11 @@
 #pragma once
 
-struct Size
-{
-  int width = 0;
-  int height = 0;
-};
+#include <Size2D.h>
 
 class IEventWindow
 {
 public:
   virtual ~IEventWindow() = default;
 
-  virtual void resize(const Size&) = 0;
+  virtual void resize(const Size2D<int>&) = 0;
 };

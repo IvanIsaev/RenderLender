@@ -2,8 +2,6 @@
 
 #include <IRenderWindow.h>
 
-#include <IEventWindow.h>
-
 #include <QWidget>
 
 class QResizeEvent;
@@ -15,13 +13,12 @@ class CRenderWindow
   Q_OBJECT
 
 public:
-  explicit CRenderWindow(IEventWindow& eventWindow);
+  explicit CRenderWindow();
 
   void* nativeWindow() const override;
 
+  Size2D<int> size() const override;
+
 protected:
   void resizeEvent(QResizeEvent* event) override;
-
-private:
-  IEventWindow& m_eventWindow;
 };

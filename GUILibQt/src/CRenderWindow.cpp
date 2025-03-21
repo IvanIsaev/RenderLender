@@ -3,10 +3,7 @@
 #include <QResizeEvent>
 #include <QSize>
 
-CRenderWindow::CRenderWindow(IEventWindow& eventWindow)
-  : m_eventWindow{ eventWindow }
-{
-}
+CRenderWindow::CRenderWindow() {}
 
 void*
 CRenderWindow::nativeWindow() const
@@ -14,13 +11,18 @@ CRenderWindow::nativeWindow() const
   return reinterpret_cast<void*>(QWidget::winId());
 }
 
+Size2D<int>
+CRenderWindow::size() const
+{
+  const auto dpr = QWidget::devicePixelRatio();
+  const auto widgetSize = QWidget::size();
+  return Size2D<int>{ .width = widgetSize.width(),
+                      .height = widgetSize.height() };
+}
+
 void
 CRenderWindow::resizeEvent(QResizeEvent* event)
 {
-  const auto& qSize = event->size();
-  const auto newSize = Size{ .width = qSize.width(), .height = qSize.height() };
-
-  m_eventWindow.resize(newSize);
-
+  // TODO: Realize resize event for renderer [isaev]
   QWidget::resizeEvent(event);
 }

@@ -4,7 +4,6 @@
 
 #include <QtWidgets/QTabWidget>
 
-
 class CRenderArea
   : public QTabWidget
   , public IRenderArea

@@ -6,9 +6,8 @@
 
 #include <memory>
 
-
 class RENDERERLIB_EXPORT CFilamentRendererFactory
 {
 public:
-	static std::unique_ptr<IRenderer> create ( );
+  static std::unique_ptr<IRenderer> create();
 };

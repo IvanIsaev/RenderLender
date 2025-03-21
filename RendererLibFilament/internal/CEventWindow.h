@@ -5,8 +5,8 @@
 class CEventWindow : public IEventWindow
 {
 public:
-  void resize(const Size&) override;
+  void resize(const Size2D<int>&) override;
 
 private:
-  Size m_newSize;
+  Size2D<int> m_newSize;
 };

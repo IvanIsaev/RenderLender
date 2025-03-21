@@ -12,10 +12,9 @@ COperationCreatingRenderWindow::COperationCreatingRenderWindow(
 }
 
 void
-COperationCreatingRenderWindow::addRenderWindow(std::string_view title,
-                                                IEventWindow& eventWindow)
+COperationCreatingRenderWindow::addRenderWindow(std::string_view title)
 {
-  auto pRenderWindow = new CRenderWindow(eventWindow);
+  auto pRenderWindow = new CRenderWindow;
 
   m_windowCollection.addTab(pRenderWindow, QString(title.data()));
 
