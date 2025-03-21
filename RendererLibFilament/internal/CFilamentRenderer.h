@@ -8,6 +8,7 @@ namespace filament {
 class Engine;
 class Renderer;
 class Scene;
+class SwapChain;
 }
 
 class CFilamentRenderer : public IRenderer
@@ -25,6 +26,7 @@ public:
 private:
   filament::Engine* m_pEngine;
   filament::Renderer* m_pRenderer;
+  filament::SwapChain* m_pSwapChain;
 
   std::unique_ptr<IEventWindow> m_pEventWindow;
 };

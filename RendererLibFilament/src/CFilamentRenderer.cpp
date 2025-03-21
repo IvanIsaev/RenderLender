@@ -5,18 +5,21 @@
 #include <backend/DriverEnums.h>
 #include <filament/Engine.h>
 #include <filament/Renderer.h>
+#include <filament/SwapChain.h>
 
 using namespace filament;
 
 CFilamentRenderer::CFilamentRenderer()
   : m_pEngine(nullptr)
   , m_pRenderer(nullptr)
+  , m_pSwapChain(nullptr)
 {
 }
 
 CFilamentRenderer::~CFilamentRenderer()
 {
   m_pEngine->destroy(m_pRenderer);
+  m_pEngine->destroy(m_pSwapChain);
 
   Engine::destroy(&m_pEngine);
 }
@@ -30,6 +33,9 @@ CFilamentRenderer::init(const Config& settings)
                 .backend(backend::Backend::VULKAN)
                 .config(&engineConfig)
                 .build();
+
+  m_pSwapChain = m_pEngine->createSwapChain(
+    settings.nativeWindow, filament::SwapChain::CONFIG_HAS_STENCIL_BUFFER);
 
   m_pRenderer = m_pEngine->createRenderer();
 }

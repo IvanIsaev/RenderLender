@@ -26,11 +26,12 @@ main(int argc, char* argv[])
     pOperationForWindowCreating->addRenderWindow("Filament render");
     pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
   }
-  const auto ws = pLastWindow->size();
-  auto nw = pLastWindow->nativeWindow();
 
+  const auto ws = pLastWindow->size();
+  const auto nw = pLastWindow->nativeWindow();
   const auto config = IRenderer::Config{ .nativeWindow = nw, .windowSize = ws };
 
+  pRenderer->init(config);
   pRenderer->execute();
 
   return pApplication->execute();
