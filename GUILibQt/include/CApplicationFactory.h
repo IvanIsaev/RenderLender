@@ -6,9 +6,8 @@
 
 #include <memory>
 
-
 class GUILIB_EXPORT CApplicationFactory
 {
 public:
-	static std::unique_ptr<IApplication> create ( int , char*[] );
+  static std::unique_ptr<IApplication> create(int, char*[]);
 };

@@ -2,8 +2,9 @@
 
 #include <CFilamentRenderer.h>
 
-
-std::unique_ptr<IRenderer> CFilamentRendererFactory::create ( )
+std::unique_ptr<IRenderer>
+CFilamentRendererFactory::create()
 {
-	return std::make_unique<CFilamentRenderer> ( );;
+  return std::make_unique<CFilamentRenderer>();
+  ;
 }

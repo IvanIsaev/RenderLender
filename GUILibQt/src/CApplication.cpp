@@ -2,10 +2,13 @@
 
 #include "CApplication.h"
 
-CApplication::CApplication ( int argc, char* argv[] ) : QApplication ( argc, argv )
-{ }
-
-bool CApplication::execute ( )
+CApplication::CApplication(int argc, char* argv[])
+  : QApplication(argc, argv)
 {
-	return QApplication::exec();
+}
+
+bool
+CApplication::execute()
+{
+  return QApplication::exec();
 }

@@ -32,7 +32,8 @@ generate_export_header(${PROJECT_NAME}
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HEADER_DIRECTORY})
 
 set(SOURCES ${ROOT_SRC}/CFilamentRenderer.cpp
-            ${ROOT_SRC}/CFilamentRendererFactory.cpp)
+            ${ROOT_SRC}/CFilamentRendererFactory.cpp            
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} 

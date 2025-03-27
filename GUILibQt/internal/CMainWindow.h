@@ -1,22 +1,31 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <IInterface.h>
+
+#include "CRenderArea.h"
 
 #include <ui_CMainWindow.h>
 
-#include <IInterface.h>
+#include <QtWidgets/QMainWindow>
 
-class CMainWindow : public QMainWindow, public IInterface
+class CMainWindow
+  : public QMainWindow
+  , public IInterface
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit CMainWindow(QWidget *parent = nullptr);
-    ~CMainWindow() = default;
+  explicit CMainWindow(QWidget* parent = nullptr);
+  ~CMainWindow() = default;
 
-    // Inherited via IInterface
-    void show ( ) override;
+  // Inherited via IInterface
+  void init() override;
+  void show() override;
+
+  IRenderArea* renderArea() override;
 
 private:
-    Ui::CMainWindowClass ui;
+  Ui::CMainWindowClass ui;
+
+  CRenderArea* m_renderArea;
 };

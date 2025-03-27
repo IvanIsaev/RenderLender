@@ -21,12 +21,18 @@ generate_export_header(${PROJECT_NAME}
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HEADER_DIRECTORY})
 
 set(MOC_HEADERS ${PRIVATE_HEADER_DIRECTORY}/CApplication.h 
-                ${PRIVATE_HEADER_DIRECTORY}/CMainWindow.h)
+                ${PRIVATE_HEADER_DIRECTORY}/CMainWindow.h
+                ${PRIVATE_HEADER_DIRECTORY}/CRenderArea.h
+                ${PRIVATE_HEADER_DIRECTORY}/CRenderWindow.h)
 
 set(SOURCES ${ROOT_SRC}/CApplication.cpp
             ${ROOT_SRC}/CApplicationFactory.cpp 
             ${ROOT_SRC}/CInterfaceFactory.cpp 
-            ${ROOT_SRC}/CMainWindow.cpp)
+            ${ROOT_SRC}/CMainWindow.cpp
+            ${ROOT_SRC}/CRenderArea.cpp
+            ${ROOT_SRC}/CRenderWindow.cpp
+            ${ROOT_SRC}/COperationCreatingRenderWindow.cpp
+)
 
 set(UIS ui/CMainWindow.ui)
 

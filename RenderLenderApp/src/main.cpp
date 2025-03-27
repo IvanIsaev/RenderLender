@@ -1,16 +1,38 @@
 #include <CApplicationFactory.h>
-#include <CInterfaceFactory.h>
 #include <CFilamentRendererFactory.h>
+#include <CInterfaceFactory.h>
 
-int main ( int argc, char* argv [ ] )
+#include <IOperationCreatingRenderWindow.h>
+#include <IRenderArea.h>
+#include <IRenderWindow.h>
+
+int
+main(int argc, char* argv[])
 {
-	auto pApplication = CApplicationFactory::create ( argc, argv );
-	auto pInterface = CInterfaceFactory::create ( );
-	auto pRenderer = CFilamentRendererFactory::create ( );
+  auto pApplication = CApplicationFactory::create(argc, argv);
+  auto pInterface = CInterfaceFactory::create();
+  auto pRenderer = CFilamentRendererFactory::create();
 
-	pInterface->show ( );
+  pInterface->init();
+  pInterface->show();
 
-	pRenderer->execute ( );
+  auto pRenderArea = pInterface->renderArea();
+  auto pLastWindow = static_cast<IRenderWindow*>(nullptr);
 
-	return pApplication->execute ( );
+  {
+    auto pOperationForWindowCreating =
+      pRenderArea->operationForCreatingRenderWindow();
+    pOperationForWindowCreating->addRenderWindow("Filament render");
+    pLastWindow = pOperationForWindowCreating->lastAddedRenderWindow();
+  }
+
+  const auto windowSize = pLastWindow->size();
+  const auto nativeWindow = pLastWindow->nativeWindow();
+  const auto config = IRenderer::Config{ .nativeWindow = nativeWindow, .windowSize = windowSize };
+
+  pRenderer->init(config);
+
+  pRenderer->execute();
+
+  return pApplication->execute();
 }
