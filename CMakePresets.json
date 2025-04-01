@@ -1,0 +1,31 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug configuration",
+      "inherits": "Base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"        
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release configuration",
+      "inherits": "Base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"        
+      }
+    },
+    {
+      "hidden": true,
+      "name": "Base",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/DWIN32 /D_WINDOWS /W3 /GR /EHsc",
+        "QT_QML_DEBUG": "OFF"
+      }
+    }
+  ]
+}
