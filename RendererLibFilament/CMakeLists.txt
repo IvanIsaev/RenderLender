@@ -33,6 +33,7 @@ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT
 
 set(SOURCES ${ROOT_SRC}/CFilamentRenderer.cpp
             ${ROOT_SRC}/CFilamentRendererFactory.cpp            
+            ${ROOT_SRC}/CMouseCursorHandler.cpp            
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})

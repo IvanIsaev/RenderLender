@@ -6,6 +6,8 @@
 #include <IRenderArea.h>
 #include <IRenderWindow.h>
 
+#include <functional>
+
 int
 main(int argc, char* argv[])
 {
@@ -30,6 +32,18 @@ main(int argc, char* argv[])
   const auto config = IRenderer::Config{ .nativeWindow = nativeWindow, .windowSize = windowSize };
 
   auto pRenderer = CFilamentRendererFactory::create();
+
+  auto pMouseCursorHandler = pRenderer->mouseCursorHandler();
+  pLastWindow->trackMousePress(std::bind(&IMouseCursorHandler::handleMousePress,
+                                         pMouseCursorHandler,
+                                         std::placeholders::_1));
+  pLastWindow->trackMouseRelease(std::bind(&IMouseCursorHandler::handleMouseRelease,
+                                         pMouseCursorHandler,
+                                         std::placeholders::_1));
+  pLastWindow->trackMouseMove(std::bind(&IMouseCursorHandler::handleMouseMove,
+                                         pMouseCursorHandler,
+                                         std::placeholders::_1));
+
   pRenderer->init(config);
   pRenderer->execute();
 

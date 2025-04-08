@@ -35,6 +35,8 @@ public:
 
   void init(const Config&) override;
 
+  IMouseCursorHandler* mouseCursorHandler() override;
+
   bool execute() override;
 
 private:
@@ -55,4 +57,6 @@ private:
   filament::Material* m_pMaterial;
   filament::Camera* m_pCamera;
   utils::Entity m_cameraId;
+
+  std::unique_ptr<IMouseCursorHandler> m_mouseCursorHandler;
 };

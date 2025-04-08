@@ -1,7 +1,22 @@
 #include <CRenderWindow.h>
 
-#include <QResizeEvent>
+#include <QMouseEvent >
+#include <QPoint>
 #include <QSize>
+
+namespace {
+IntVector2D
+qSizeToSize2D(const QSize& size)
+{
+  return IntVector2D{ .width = size.width(), .height = size.height() };
+}
+
+IntVector2D
+qPointToSize2D(const QPoint& point)
+{
+  return IntVector2D{ .width = point.x(), .height = point.y() };
+}
+}
 
 CRenderWindow::CRenderWindow(QWidget* parent)
   : QWidget(parent)
@@ -16,20 +31,55 @@ CRenderWindow::nativeWindow() const
   return reinterpret_cast<void*>(QWidget::winId());
 }
 
-Size2D<int>
+IntVector2D
 CRenderWindow::size() const
 {
-  const auto dpr = QWidget::devicePixelRatio();
-  const auto widgetSize = QWidget::size() * dpr;
-  return Size2D<int>{ .width = widgetSize.width(),
-                      .height = widgetSize.height() };
+  return qSizeToSize2D(QWidget::size() * QWidget::devicePixelRatio());
 }
 
 void
-CRenderWindow::resizeEvent(QResizeEvent* event)
+CRenderWindow::trackMousePress(const SlotForMouseSignal& slot) const
 {
-  // TODO: Realize resize event for renderer [isaev]
-  QWidget::resizeEvent(event);
+  m_mousePressedSignal.connect(slot);
+}
+
+void
+CRenderWindow::trackMouseRelease(const SlotForMouseSignal& slot) const
+{
+  m_mouseReleasedSignal.connect(slot);
+}
+
+void
+CRenderWindow::trackMouseMove(const SlotForMouseSignal& slot) const
+{
+  m_mouseMovedSignal.connect(slot);
+}
+
+void
+CRenderWindow::mousePressEvent(QMouseEvent* event)
+{
+  m_mousePressedSignal(
+    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+
+  QWidget::mousePressEvent(event);
+}
+
+void
+CRenderWindow::mouseReleaseEvent(QMouseEvent* event)
+{
+  m_mouseReleasedSignal(
+    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+
+  QWidget::mouseReleaseEvent(event);
+}
+
+void
+CRenderWindow::mouseMoveEvent(QMouseEvent* event)
+{
+  m_mouseMovedSignal(
+    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+
+  QWidget::mouseMoveEvent(event);
 }
 
 QPaintEngine*

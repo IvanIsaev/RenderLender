@@ -1,5 +1,6 @@
 #include <CFilamentRenderer.h>
 
+#include <CMouseCursorHandler.h>
 #include <DeleteMe.h>
 
 #include <backend/BufferDescriptor.h>
@@ -57,6 +58,7 @@ CFilamentRenderer::CFilamentRenderer()
   , m_pIndexBuffer(nullptr)
   , m_pMaterial(nullptr)
   , m_pCamera(nullptr)
+  , m_mouseCursorHandler(std::make_unique<CMouseCursorHandler>())
 {
 }
 
@@ -103,6 +105,12 @@ CFilamentRenderer::init(const Config& settings)
   m_pMainView->setScene(m_pScene);
 
   setup();
+}
+
+IMouseCursorHandler*
+CFilamentRenderer::mouseCursorHandler()
+{
+  return m_mouseCursorHandler.get();
 }
 
 void

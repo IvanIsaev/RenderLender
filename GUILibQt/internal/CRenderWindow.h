@@ -4,7 +4,7 @@
 
 #include <QWidget>
 
-class QResizeEvent;
+class QMouseEvent;
 
 class CRenderWindow
   : public QWidget
@@ -13,14 +13,25 @@ class CRenderWindow
   Q_OBJECT
 
 public:
-  explicit CRenderWindow(QWidget * = nullptr);
+  explicit CRenderWindow(QWidget* = nullptr);
 
   void* nativeWindow() const override;
 
-  Size2D<int> size() const override;
+  IntVector2D size() const override;
+
+  void trackMousePress(const SlotForMouseSignal&) const override;
+  void trackMouseRelease(const SlotForMouseSignal&) const override;
+  void trackMouseMove(const SlotForMouseSignal&) const override;
 
 protected:
-  void resizeEvent(QResizeEvent* event) override;
+  void mousePressEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
+  void mouseMoveEvent(QMouseEvent* event) override;
 
   QPaintEngine* paintEngine() const override;
+
+private:
+  mutable MouseSignal m_mousePressedSignal;
+  mutable MouseSignal m_mouseReleasedSignal;
+  mutable MouseSignal m_mouseMovedSignal;
 };
