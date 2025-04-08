@@ -2,7 +2,7 @@
 
 #include "IMouseCursorHandler.h"
 
-#include <Size2D.h>
+#include <Vector2D.h>
 
 class IRenderer
 {

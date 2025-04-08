@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Size2D.h>
+#include <Vector2D.h>
 
 #include <boost/signals2/signal.hpp>
 
