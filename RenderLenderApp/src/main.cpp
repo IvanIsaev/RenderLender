@@ -10,8 +10,7 @@ int
 main(int argc, char* argv[])
 {
   auto pApplication = CApplicationFactory::create(argc, argv);
-  auto pInterface = CInterfaceFactory::create();
-  auto pRenderer = CFilamentRendererFactory::create();
+  auto pInterface = CInterfaceFactory::create();  
 
   pInterface->init();
   pInterface->show();
@@ -30,8 +29,8 @@ main(int argc, char* argv[])
   const auto nativeWindow = pLastWindow->nativeWindow();
   const auto config = IRenderer::Config{ .nativeWindow = nativeWindow, .windowSize = windowSize };
 
+  auto pRenderer = CFilamentRendererFactory::create();
   pRenderer->init(config);
-
   pRenderer->execute();
 
   return pApplication->execute();

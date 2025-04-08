@@ -13,6 +13,4 @@ class CRenderArea
 public:
   std::unique_ptr<IOperationCreatingRenderWindow>
   operationForCreatingRenderWindow() override;
-
-private:
 };
