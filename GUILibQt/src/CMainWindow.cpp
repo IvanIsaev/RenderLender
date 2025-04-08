@@ -12,6 +12,8 @@ CMainWindow::CMainWindow(QWidget* parent)
 void
 CMainWindow::init()
 {
+  setWindowState(Qt::WindowFullScreen);
+
   auto pCentralWidget = centralWidget();
 
   auto pHorizontalCentralLayout = new QHBoxLayout;
