@@ -59,7 +59,8 @@ find_package(Vulkan REQUIRED COMPONENTS shaderc_combined)
 target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0)
+target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0
+                                                                            _SILENCE_CXX23_DENORM_DEPRECATION_WARNING)
 
 #Hack to place this dll to the same folder as exe
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
