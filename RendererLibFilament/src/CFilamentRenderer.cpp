@@ -1,10 +1,10 @@
 #include <CFilamentRenderer.h>
 
-#include <CMouseCursorHandler.h>
 #include <DeleteMe.h>
 
 #include <backend/BufferDescriptor.h>
 #include <backend/DriverEnums.h>
+#include <camutils/Manipulator.h>
 #include <filament/Camera.h>
 #include <filament/Engine.h>
 #include <filament/IndexBuffer.h>
@@ -58,6 +58,7 @@ CFilamentRenderer::CFilamentRenderer()
   , m_pIndexBuffer(nullptr)
   , m_pMaterial(nullptr)
   , m_pCamera(nullptr)
+  , m_pCameraManipulator(nullptr)
   , m_mouseCursorHandler(std::make_unique<CMouseCursorHandler>())
 {
 }
@@ -76,6 +77,8 @@ CFilamentRenderer::~CFilamentRenderer()
   m_pEngine->destroy(m_renderable);
   m_pEngine->destroy(m_pMaterial);
 
+  delete m_pCameraManipulator;
+
   Engine::destroy(&m_pEngine);
 }
 
@@ -86,7 +89,7 @@ CFilamentRenderer::init(const Config& settings)
 
   m_pEngine = Engine::Builder()
                 .backend(backend::Backend::VULKAN)
-                .featureLevel(backend::FeatureLevel::FEATURE_LEVEL_0)
+                .featureLevel(backend::FeatureLevel::FEATURE_LEVEL_3)
                 .config(&engineConfig)
                 .build();
 
@@ -98,6 +101,15 @@ CFilamentRenderer::init(const Config& settings)
   m_pMainView = m_pEngine->createView();
 
   configureViewport(settings);
+
+  m_pCameraManipulator =
+    CameraManipulator::Builder()
+      .viewport(settings.windowSize.width, settings.windowSize.height)
+      .targetPosition(0, 0, -4)
+      .flightMoveDamping(15.0)
+      .build(filament::camutils::Mode::ORBIT);
+  m_mouseCursorHandler->setRenderer(this);
+  m_mouseCursorHandler->setCameraManipulator(m_pCameraManipulator);
 
   m_pScene = m_pEngine->createScene();
 
@@ -167,10 +179,14 @@ CFilamentRenderer::setup()
                         .castShadows(false)
                         .build(*m_pEngine, m_renderable);
 
+  auto& transformManager = m_pEngine->getTransformManager();
+  auto ti = transformManager.getInstance(m_renderable);
+  filament::math::mat4f transform = filament::math::mat4f{
+    filament::math::mat3f(1), filament::math::float3(0, 0, -4)
+  } * transformManager.getWorldTransform(ti);
+
   m_pScene->addEntity(m_renderable);
-  m_cameraId = utils::EntityManager::get().create();
-  m_pCamera = m_pEngine->createCamera(m_cameraId);
-  m_pMainView->setCamera(m_pCamera);
+  transformManager.setTransform(ti, transform);
 }
 
 void
@@ -179,12 +195,23 @@ CFilamentRenderer::configureViewport(const Config& config)
   const uint32_t width = config.windowSize.width;
   const uint32_t height = config.windowSize.height;
 
+  auto aspectRatio = double(width) / height;
+
+  m_cameraId = utils::EntityManager::get().create();
+  m_pCamera = m_pEngine->createCamera(m_cameraId);
+  m_pCamera->setLensProjection(28, 1.0, 0.1, 100.0);
+  m_pCamera->setScaling({ 1.0 / aspectRatio, 1.0 });
+  m_pMainView->setCamera(m_pCamera);
   m_pMainView->setViewport({ 0, 0, width, height });
 }
 
 bool
 CFilamentRenderer::execute()
 {
+  filament::math::float3 eye, center, up;
+  m_pCameraManipulator->getLookAt(&eye, &center, &up);
+  m_pCamera->lookAt(eye, center, up);
+
   if (m_pRenderer->beginFrame(m_pSwapChain)) {
     m_pRenderer->render(m_pMainView);
     m_pRenderer->endFrame();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <IRenderer.h>
+#include <CMouseCursorHandler.h>
 
 #include <utils/Entity.h>
 
@@ -20,7 +21,7 @@ class VertexBuffer;
 class View;
 
 namespace camutils {
-template<typename FLOAT>
+template<typename T>
 class Manipulator;
 }
 }
@@ -58,5 +59,7 @@ private:
   filament::Camera* m_pCamera;
   utils::Entity m_cameraId;
 
-  std::unique_ptr<IMouseCursorHandler> m_mouseCursorHandler;
+  CameraManipulator* m_pCameraManipulator;
+
+  std::unique_ptr<CMouseCursorHandler> m_mouseCursorHandler;
 };
