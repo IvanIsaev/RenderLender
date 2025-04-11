@@ -7,4 +7,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE include/)
 
 target_include_directories(${PROJECT_NAME} INTERFACE $<TARGET_PROPERTY:Common,INTERFACE_INCLUDE_DIRECTORIES>)
 
+cmake_policy(SET CMP0167 OLD)
+find_package(Boost REQUIRED)
+target_link_libraries(${PROJECT_NAME} INTERFACE Boost::headers)
+
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_23)

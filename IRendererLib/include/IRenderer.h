@@ -1,6 +1,8 @@
 #pragma once
 
-#include <Size2D.h>
+#include "IMouseCursorHandler.h"
+
+#include <Vector2D.h>
 
 class IRenderer
 {
@@ -8,7 +10,7 @@ public:
   struct Config
   {
     void* nativeWindow;
-    Size2D<int> windowSize;
+    IntVector2D windowSize;
   };
 
 public:
@@ -16,5 +18,7 @@ public:
 
   virtual void init(const Config&) = 0;
 
+  virtual IMouseCursorHandler* mouseCursorHandler() = 0;
+  
   virtual bool execute() = 0;
 };
