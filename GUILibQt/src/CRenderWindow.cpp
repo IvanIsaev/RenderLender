@@ -1,20 +1,22 @@
-#include <CRenderWindow.h>
+#include "CRenderWindow.h"
 
-#include <QMouseEvent >
+#include <QMouseEvent>
 #include <QPoint>
 #include <QSize>
 
 namespace {
-IntVector2D
+IntSize2D
 qSizeToSize2D(const QSize& size)
 {
-  return IntVector2D{ .width = size.width(), .height = size.height() };
+  return IntSize2D{ .width = static_cast<uint32_t>(size.width()),
+                    .height = static_cast<uint32_t>(size.height()) };
 }
 
-IntVector2D
+IntPoint2D
 qPointToSize2D(const QPoint& point)
 {
-  return IntVector2D{ .width = point.x(), .height = point.y() };
+  return IntPoint2D{ .x = static_cast<uint32_t>(point.x()),
+                     .y = static_cast<uint32_t>(point.y()) };
 }
 }
 
@@ -31,7 +33,7 @@ CRenderWindow::nativeWindow() const
   return reinterpret_cast<void*>(QWidget::winId());
 }
 
-IntVector2D
+IntSize2D
 CRenderWindow::size() const
 {
   return qSizeToSize2D(QWidget::size() * QWidget::devicePixelRatio());

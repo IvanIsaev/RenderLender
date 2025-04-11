@@ -1,8 +1,8 @@
 #pragma once
 
-#include <IInterface.h>
-
 #include "CRenderArea.h"
+
+#include <IInterface.h>
 
 #include <ui_CMainWindow.h>
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <Vector2D.h>
+#include <Structures.h>
 
 #include <boost/signals2/signal.hpp>
 
 class IRenderWindow
 {
 public:
-	using MouseSignal = boost::signals2::signal<void(const IntVector2D&)>;
+	using MouseSignal = boost::signals2::signal<void(const IntPoint2D&)>;
 	using SlotForMouseSignal = MouseSignal::slot_type;
 
 public:
@@ -15,7 +15,7 @@ public:
 
   virtual void* nativeWindow() const = 0;
 
-  virtual IntVector2D size() const = 0;
+  virtual IntSize2D size() const = 0;
 
   virtual void trackMousePress(const SlotForMouseSignal&) const = 0;
   virtual void trackMouseRelease(const SlotForMouseSignal&) const = 0;

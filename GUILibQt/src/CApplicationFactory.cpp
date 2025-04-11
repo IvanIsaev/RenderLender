@@ -1,7 +1,4 @@
-#pragma once
-
 #include "CApplicationfactory.h"
-
 #include "CApplication.h"
 
 std::unique_ptr<IApplication>

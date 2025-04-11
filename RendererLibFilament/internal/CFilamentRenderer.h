@@ -1,65 +1,50 @@
 #pragma once
 
-#include <IRenderer.h>
-#include <CMouseCursorHandler.h>
+#include "CMouseCursorHandler.h"
+#include "FilamentComponentCleaner.h"
+#include "FilamentEngineFwd.h"
+#include "FilamentTypesFwd.h"
 
-#include <utils/Entity.h>
+#include <RenderConfig.h>
 
-#include <memory>
-
-namespace filament {
-class Camera;
-class Engine;
-class IndexBuffer;
-class Material;
-class MaterialInstance;
-class Renderer;
-class Scene;
-class Skybox;
-class SwapChain;
-class VertexBuffer;
-class View;
-
-namespace camutils {
-template<typename T>
-class Manipulator;
-}
-}
-
-class CFilamentRenderer : public IRenderer
+class CFilamentRenderer
 {
-  using CameraManipulator = filament::camutils::Manipulator<float>;
-
 public:
   CFilamentRenderer();
   ~CFilamentRenderer();
 
-  void init(const Config&) override;
+  void init(const RenderConfig&);
 
-  IMouseCursorHandler* mouseCursorHandler() override;
+  void execute();
 
-  bool execute() override;
-
-private:
-  void setup();
-
-  void configureViewport(const Config&);
+  COperator& cameraOperator();
 
 private:
-  filament::Engine* m_pEngine;
-  filament::Renderer* m_pRenderer;
-  filament::SwapChain* m_pSwapChain;
-  filament::View* m_pMainView;
-  filament::Scene* m_pScene;
-  filament::Skybox* m_pSkybox;
-  filament::VertexBuffer* m_pVertexBuffer;
-  filament::IndexBuffer* m_pIndexBuffer;
-  utils::Entity m_renderable;
-  filament::Material* m_pMaterial;
-  filament::Camera* m_pCamera;
-  utils::Entity m_cameraId;
+  EngineShared createEngine() const;
+  RendererUnique createRenderer(EngineShared);
+  SwapChainUnique createSwapChain(EngineShared, void*);
+  ViewUnique createView(EngineShared);
+  CCameraUnique createCamera(EngineShared);
+  SceneUnique createScene(EngineShared);
+  SkyboxUnique createSkybox(EngineShared);
+  VertexBufferUnique createVertexBuffer(EngineShared);
+  IndexBufferUnique createIndexBuffer(EngineShared);
+  EntityUnique createRenderable(EngineShared,
+                                const filament::VertexBuffer*,
+                                const filament::IndexBuffer*);
+  MaterialUnique createMaterial(EngineShared);
+  CameraManipulatorUnique createCameraManipulator(const IntSize2D&);
 
-  CameraManipulator* m_pCameraManipulator;
-
-  std::unique_ptr<CMouseCursorHandler> m_mouseCursorHandler;
+private:
+  EngineShared m_pEngine;
+  RendererUnique m_pRenderer;
+  SwapChainUnique m_pSwapChain;
+  ViewUnique m_pMainView;
+  SceneUnique m_pScene;
+  SkyboxUnique m_pSkybox;
+  VertexBufferUnique m_pVertexBuffer;
+  IndexBufferUnique m_pIndexBuffer;
+  EntityUnique m_pRenderable;
+  MaterialUnique m_pMaterial;
+  OperatorUnique m_pOperator;
 };

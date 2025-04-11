@@ -1,6 +1,6 @@
-#include <COperationCreatingRenderWindow.h>
-#include <CRenderArea.h>
-#include <CRenderWindow.h>
+#include "CRenderArea.h"
+#include "COperationCreatingRenderWindow.h"
+#include "CRenderWindow.h"
 
 std::unique_ptr<IOperationCreatingRenderWindow>
 CRenderArea::operationForCreatingRenderWindow()

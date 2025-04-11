@@ -1,52 +1,45 @@
-#pragma once
+#include "CMouseCursorHandler.h"
+#include "COperator.h"
 
-#include <IRenderer.h>
+#include <IRendererFacade.h>
+
+#include <Structures.h>
 
 #include <camutils/Manipulator.h>
-
-#include <Vector2D.h>
-
-#include <CMouseCursorHandler.h>
+#include <filament/Camera.h>
 
 #include <iostream>
 
-void
-CMouseCursorHandler::handleMousePress(const IntVector2D& position)
+CMouseCursorHandler::CMouseCursorHandler(IRendererFacade* pRenderer,
+                                         COperator& cameraOperator)
+  : m_pRenderer(pRenderer)
+  , m_cameraOperator(cameraOperator)
 {
-  if (m_pCameraManipulator && m_pRenderer) {
-    m_pCameraManipulator->grabBegin(position.width, position.height, false);
+}
+
+void
+CMouseCursorHandler::handleMousePress(const IntPoint2D& position)
+{
+  if (m_pRenderer) {
+    m_cameraOperator.grabBegin(position.x, position.y, false);
     m_pRenderer->execute();
   }
 }
 
 void
-CMouseCursorHandler::handleMouseRelease(const IntVector2D& position)
+CMouseCursorHandler::handleMouseRelease(const IntPoint2D& position)
 {
-  if (m_pCameraManipulator && m_pRenderer) {
-    m_pCameraManipulator->grabEnd();
+  if (m_pRenderer) {
+    m_cameraOperator.grabEnd();
     m_pRenderer->execute();
   }
 }
 
 void
-CMouseCursorHandler::handleMouseMove(const IntVector2D& position)
+CMouseCursorHandler::handleMouseMove(const IntPoint2D& position)
 {
-  if (m_pCameraManipulator && m_pRenderer) {
-    m_pCameraManipulator->grabUpdate(position.width, position.height);
+  if (m_pRenderer) {
+    m_cameraOperator.grabUpdate(position.x, position.y);
     m_pRenderer->execute();
   }
 }
-
-void
-CMouseCursorHandler::setRenderer(IRenderer* pRenderer)
-{
-  m_pRenderer = pRenderer;
-}
-
-void
-CMouseCursorHandler::setCameraManipulator(
-  filament::camutils::Manipulator<float>* pCameraManipulator)
-{
-  m_pCameraManipulator = pCameraManipulator;
-}
-

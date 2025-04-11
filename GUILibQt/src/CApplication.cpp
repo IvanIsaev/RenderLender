@@ -1,5 +1,3 @@
-#pragma once
-
 #include "CApplication.h"
 
 CApplication::CApplication(int argc, char* argv[])

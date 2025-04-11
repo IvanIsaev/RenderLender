@@ -1,30 +1,23 @@
 #pragma once
 
-#include <Vector2D.h>
+#include <Structures.h>
 
 #include <IMouseCursorHandler.h>
 
-class IRenderer;
-namespace filament {
-namespace camutils {
-template<typename T>
-class Manipulator;
-}
-}
+class COperator;
+class IRendererFacade;
 
 class CMouseCursorHandler : public IMouseCursorHandler
 {
 public:
+  explicit CMouseCursorHandler(IRendererFacade*, COperator&);
   virtual ~CMouseCursorHandler() = default;
 
-  void handleMousePress(const IntVector2D&) override;
-  void handleMouseRelease(const IntVector2D&) override;
-  void handleMouseMove(const IntVector2D&) override;
-
-  void setRenderer(IRenderer*);
-  void setCameraManipulator(filament::camutils::Manipulator<float>*);
+  void handleMousePress(const IntPoint2D&) override;
+  void handleMouseRelease(const IntPoint2D&) override;
+  void handleMouseMove(const IntPoint2D&) override;
 
 private:
-  IRenderer* m_pRenderer;
-  filament::camutils::Manipulator<float>* m_pCameraManipulator;
+  IRendererFacade* m_pRenderer;
+  COperator& m_cameraOperator;
 };
