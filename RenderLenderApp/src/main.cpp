@@ -1,4 +1,5 @@
 #include <CApplicationFactory.h>
+#include <CAssimp.h>
 #include <CFilamentRendererFactory.h>
 #include <CInterfaceFactory.h>
 
@@ -13,6 +14,8 @@
 int
 main(int argc, char* argv[])
 {
+  auto importManager = CAssimp{};
+
   auto pApplication = CApplicationFactory::create(argc, argv);
   auto pInterface = CInterfaceFactory::create();  
 
