@@ -1,7 +1,4 @@
-#pragma once
-
 #include "CInterfaceFactory.h"
-
 #include "CMainWindow.h"
 
 std::unique_ptr<IInterface>

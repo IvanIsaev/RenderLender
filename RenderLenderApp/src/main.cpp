@@ -2,6 +2,8 @@
 #include <CFilamentRendererFactory.h>
 #include <CInterfaceFactory.h>
 
+#include <RenderConfig.h>
+
 #include <IOperationCreatingRenderWindow.h>
 #include <IRenderArea.h>
 #include <IRenderWindow.h>
@@ -29,9 +31,10 @@ main(int argc, char* argv[])
 
   const auto windowSize = pLastWindow->size();
   const auto nativeWindow = pLastWindow->nativeWindow();
-  const auto config = IRenderer::Config{ .nativeWindow = nativeWindow, .windowSize = windowSize };
+  const auto config = RenderConfig{ .nativeWindow = nativeWindow, .windowSize = windowSize };
 
   auto pRenderer = CFilamentRendererFactory::create();
+  pRenderer->init(config);
 
   auto pMouseCursorHandler = pRenderer->mouseCursorHandler();
   pLastWindow->trackMousePress(std::bind(&IMouseCursorHandler::handleMousePress,
@@ -43,8 +46,7 @@ main(int argc, char* argv[])
   pLastWindow->trackMouseMove(std::bind(&IMouseCursorHandler::handleMouseMove,
                                          pMouseCursorHandler,
                                          std::placeholders::_1));
-
-  pRenderer->init(config);
+  
   pRenderer->execute();
 
   return pApplication->execute();

@@ -1,5 +1,4 @@
 #include "COperationCreatingRenderWindow.h"
-
 #include "CRenderWindow.h"
 
 #include <QTabWidget>

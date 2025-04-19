@@ -1,11 +1,12 @@
-#include <CFilamentRenderer.h>
-
-#include <DeleteMe.h>
+#include "CFilamentRenderer.h"
+#include "CCamera.h"
+#include "CEntity.h"
+#include "COperator.h"
+#include "DeleteMe.h"
 
 #include <backend/BufferDescriptor.h>
 #include <backend/DriverEnums.h>
 #include <camutils/Manipulator.h>
-#include <filament/Camera.h>
 #include <filament/Engine.h>
 #include <filament/IndexBuffer.h>
 #include <filament/Material.h>
@@ -20,8 +21,7 @@
 #include <filament/View.h>
 #include <filament/ViewPort.h>
 
-#include <math/vec2.h>
-
+#include <utils/Entity.h>
 #include <utils/EntityManager.h>
 
 #include <cmath>
@@ -49,93 +49,142 @@ static constexpr uint16_t TRIANGLE_INDICES[3] = { 0, 1, 2 };
 
 CFilamentRenderer::CFilamentRenderer()
   : m_pEngine(nullptr)
-  , m_pRenderer(nullptr)
-  , m_pSwapChain(nullptr)
-  , m_pMainView(nullptr)
-  , m_pScene(nullptr)
-  , m_pSkybox(nullptr)
-  , m_pVertexBuffer(nullptr)
-  , m_pIndexBuffer(nullptr)
-  , m_pMaterial(nullptr)
-  , m_pCamera(nullptr)
-  , m_pCameraManipulator(nullptr)
-  , m_mouseCursorHandler(std::make_unique<CMouseCursorHandler>())
+  , m_pRenderer(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pSwapChain(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pMainView(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pScene(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pSkybox(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pVertexBuffer(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pIndexBuffer(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pRenderable(nullptr, FilamentComponentCleaner(nullptr))
+  , m_pMaterial(nullptr, FilamentComponentCleaner(nullptr))
+  ,m_pOperator(nullptr)
 {
 }
 
-CFilamentRenderer::~CFilamentRenderer()
-{
-  m_pEngine->destroy(m_pRenderer);
-  m_pEngine->destroy(m_pSwapChain);
-  m_pEngine->destroyCameraComponent(m_cameraId);
-  utils::EntityManager::get().destroy(m_cameraId);
-  m_pEngine->destroy(m_pMainView);
-  m_pEngine->destroy(m_pScene);
-  m_pEngine->destroy(m_pSkybox);
-  m_pEngine->destroy(m_pVertexBuffer);
-  m_pEngine->destroy(m_pIndexBuffer);
-  m_pEngine->destroy(m_renderable);
-  m_pEngine->destroy(m_pMaterial);
-
-  delete m_pCameraManipulator;
-
-  Engine::destroy(&m_pEngine);
-}
+CFilamentRenderer::~CFilamentRenderer() {}
 
 void
-CFilamentRenderer::init(const Config& settings)
+CFilamentRenderer::init(const RenderConfig& settings)
 {
-  const auto engineConfig = Engine::Config{};
+  m_pEngine = createEngine();
+  m_pRenderer = createRenderer(m_pEngine);
+  m_pSwapChain = createSwapChain(m_pEngine, settings.nativeWindow);
+  m_pMainView = createView(m_pEngine);
 
-  m_pEngine = Engine::Builder()
-                .backend(backend::Backend::VULKAN)
-                .featureLevel(backend::FeatureLevel::FEATURE_LEVEL_3)
-                .config(&engineConfig)
-                .build();
+  const auto width = settings.windowSize.width;
+  const auto height = settings.windowSize.height;
 
-  m_pSwapChain = m_pEngine->createSwapChain(
-    settings.nativeWindow, filament::SwapChain::CONFIG_HAS_STENCIL_BUFFER);
+  auto pCamera = createCamera(m_pEngine);  
+  m_pMainView->setCamera(&pCamera->camera());
+  m_pMainView->setViewport({ 0, 0, width, height });
 
-  m_pRenderer = m_pEngine->createRenderer();
+  auto pCameraManipulator = createCameraManipulator(settings.windowSize);
 
-  m_pMainView = m_pEngine->createView();
+  m_pOperator = std::make_unique<COperator>(std::move(pCamera), std::move(pCameraManipulator));
+  m_pOperator->setDefaultCameraSetting(settings.windowSize);
+  m_pOperator->updateCamera();
 
-  configureViewport(settings);
-
-  m_pCameraManipulator =
-    CameraManipulator::Builder()
-      .viewport(settings.windowSize.width, settings.windowSize.height)
-      .targetPosition(0, 0, -4)
-      .flightMoveDamping(15.0)
-      .build(filament::camutils::Mode::ORBIT);
-  m_mouseCursorHandler->setRenderer(this);
-  m_mouseCursorHandler->setCameraManipulator(m_pCameraManipulator);
-
-  m_pScene = m_pEngine->createScene();
+  m_pScene = createScene(m_pEngine);
 
   m_pMainView->setVisibleLayers(0x4, 0x4); // Magic numbers
-  m_pMainView->setScene(m_pScene);
+  m_pMainView->setScene(m_pScene.get());
 
-  setup();
-}
-
-IMouseCursorHandler*
-CFilamentRenderer::mouseCursorHandler()
-{
-  return m_mouseCursorHandler.get();
-}
-
-void
-CFilamentRenderer::setup()
-{
-  m_pSkybox =
-    Skybox::Builder().color({ 0.1, 0.125, 0.25, 1.0 }).build(*m_pEngine);
-
-  m_pScene->setSkybox(m_pSkybox);
+  m_pSkybox = createSkybox(m_pEngine);
+  m_pScene->setSkybox(m_pSkybox.get());
 
   m_pMainView->setPostProcessingEnabled(false);
 
-  m_pVertexBuffer =
+  m_pVertexBuffer = createVertexBuffer(m_pEngine);
+  m_pVertexBuffer->setBufferAt(
+    *m_pEngine,
+    0,
+    VertexBuffer::BufferDescriptor(TRIANGLE_VERTICES, 36, nullptr));
+
+  m_pIndexBuffer = createIndexBuffer(m_pEngine);
+  m_pIndexBuffer->setBuffer(
+    *m_pEngine, IndexBuffer::BufferDescriptor(TRIANGLE_INDICES, 6, nullptr));
+
+  m_pMaterial = createMaterial(m_pEngine);
+
+  m_pRenderable =
+    createRenderable(m_pEngine, m_pVertexBuffer.get(), m_pIndexBuffer.get());
+
+  auto& transformManager = m_pEngine->getTransformManager();
+  auto ti = transformManager.getInstance(m_pRenderable->entityId());
+  filament::math::mat4f transform = filament::math::mat4f{
+    filament::math::mat3f(1), filament::math::float3(0, 0, -10)
+  } * transformManager.getWorldTransform(ti);
+
+  m_pScene->addEntity(m_pRenderable->entityId());
+  transformManager.setTransform(ti, transform);
+}
+
+EngineShared
+CFilamentRenderer::createEngine() const
+{
+  const auto engineConfig = Engine::Config{};
+  const auto engineCleaner = [](filament::Engine* pEngine) {
+    Engine::destroy(&pEngine);
+  };
+
+  return EngineShared(Engine::Builder()
+                        .backend(backend::Backend::VULKAN)
+                        .featureLevel(backend::FeatureLevel::FEATURE_LEVEL_3)
+                        .config(&engineConfig)
+                        .build(),
+                      engineCleaner);
+}
+
+RendererUnique
+CFilamentRenderer::createRenderer(EngineShared pEngine)
+{
+  return RendererUnique(pEngine->createRenderer(),
+                        FilamentComponentCleaner(pEngine));
+}
+
+SwapChainUnique
+CFilamentRenderer::createSwapChain(EngineShared pEngine, void* pNativeWindow)
+{
+  return SwapChainUnique(
+    m_pEngine->createSwapChain(pNativeWindow,
+                               filament::SwapChain::CONFIG_HAS_STENCIL_BUFFER),
+    FilamentComponentCleaner(pEngine));
+}
+
+ViewUnique
+CFilamentRenderer::createView(EngineShared pEngine)
+{
+  return ViewUnique(pEngine->createView(), FilamentComponentCleaner(pEngine));
+}
+
+CCameraUnique
+CFilamentRenderer::createCamera(EngineShared pEngine)
+{
+  const auto cameraId = utils::EntityManager::get().create();
+  const auto pCamera = pEngine->createCamera(cameraId);
+  return CCameraUnique(new CCamera(pCamera, cameraId),
+                       FilamentComponentCleaner(pEngine));
+}
+
+SceneUnique
+CFilamentRenderer::createScene(EngineShared pEngine)
+{
+  return SceneUnique(pEngine->createScene(), FilamentComponentCleaner(pEngine));
+}
+
+SkyboxUnique
+CFilamentRenderer::createSkybox(EngineShared pEngine)
+{
+  return SkyboxUnique(
+    Skybox::Builder().color({ 0.1, 0.125, 0.25, 1.0 }).build(*pEngine),
+    FilamentComponentCleaner(pEngine));
+}
+
+VertexBufferUnique
+CFilamentRenderer::createVertexBuffer(EngineShared pEngine)
+{
+  const auto pVertexBuffer =
     VertexBuffer::Builder()
       .vertexCount(3)
       .bufferCount(1)
@@ -147,74 +196,77 @@ CFilamentRenderer::setup()
       .attribute(
         VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 8, 12)
       .normalized(VertexAttribute::COLOR)
-      .build(*m_pEngine);
-  m_pVertexBuffer->setBufferAt(
-    *m_pEngine,
-    0,
-    VertexBuffer::BufferDescriptor(TRIANGLE_VERTICES, 36, nullptr));
+      .build(*pEngine);
 
-  m_pIndexBuffer = IndexBuffer::Builder()
-                     .indexCount(3)
-                     .bufferType(IndexBuffer::IndexType::USHORT)
-                     .build(*m_pEngine);
-  m_pIndexBuffer->setBuffer(
-    *m_pEngine, IndexBuffer::BufferDescriptor(TRIANGLE_INDICES, 6, nullptr));
+  return VertexBufferUnique(pVertexBuffer, FilamentComponentCleaner(pEngine));
+}
 
-  m_pMaterial = Material::Builder()
-                  .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-                  .build(*m_pEngine);
+IndexBufferUnique
+CFilamentRenderer::createIndexBuffer(EngineShared pEngine)
+{
+  const auto pIndexBuffer = IndexBuffer::Builder()
+                              .indexCount(3)
+                              .bufferType(IndexBuffer::IndexType::USHORT)
+                              .build(*pEngine);
+  return IndexBufferUnique(pIndexBuffer, FilamentComponentCleaner(pEngine));
+}
 
-  m_renderable = utils::EntityManager::get().create();
-  const auto result = RenderableManager::Builder(1)
-                        .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                        .material(0, m_pMaterial->getDefaultInstance())
-                        .geometry(0,
-                                  RenderableManager::PrimitiveType::TRIANGLES,
-                                  m_pVertexBuffer,
-                                  m_pIndexBuffer,
-                                  0,
-                                  3)
-                        .culling(false)
-                        .receiveShadows(false)
-                        .castShadows(false)
-                        .build(*m_pEngine, m_renderable);
+EntityUnique
+CFilamentRenderer::createRenderable(EngineShared pEngine,
+                                    const filament::VertexBuffer*,
+                                    const filament::IndexBuffer*)
+{
+  const auto renderable = utils::EntityManager::get().create();
+  RenderableManager::Builder(1)
+    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+    .material(0, m_pMaterial->getDefaultInstance())
+    .geometry(0,
+              RenderableManager::PrimitiveType::TRIANGLES,
+              m_pVertexBuffer.get(),
+              m_pIndexBuffer.get(),
+              0,
+              3)
+    .culling(false)
+    .receiveShadows(false)
+    .castShadows(false)
+    .build(*pEngine, renderable);
 
-  auto& transformManager = m_pEngine->getTransformManager();
-  auto ti = transformManager.getInstance(m_renderable);
-  filament::math::mat4f transform = filament::math::mat4f{
-    filament::math::mat3f(1), filament::math::float3(0, 0, -4)
-  } * transformManager.getWorldTransform(ti);
+  return EntityUnique(new CEntity(renderable),
+                      FilamentComponentCleaner(pEngine));
+}
 
-  m_pScene->addEntity(m_renderable);
-  transformManager.setTransform(ti, transform);
+MaterialUnique
+CFilamentRenderer::createMaterial(EngineShared pEngine)
+{
+  return MaterialUnique(
+    Material::Builder()
+      .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
+      .build(*pEngine),
+    FilamentComponentCleaner(pEngine));
+}
+
+CameraManipulatorUnique
+CFilamentRenderer::createCameraManipulator(const IntSize2D& windowSize)
+{
+  return CameraManipulatorUnique(
+    CameraManipulator::Builder()
+      .viewport(windowSize.width, windowSize.height)
+      .targetPosition(0, 0, -10)
+      .flightMoveDamping(15.0)
+      .build(filament::camutils::Mode::ORBIT));
 }
 
 void
-CFilamentRenderer::configureViewport(const Config& config)
-{
-  const uint32_t width = config.windowSize.width;
-  const uint32_t height = config.windowSize.height;
-
-  auto aspectRatio = double(width) / height;
-
-  m_cameraId = utils::EntityManager::get().create();
-  m_pCamera = m_pEngine->createCamera(m_cameraId);
-  m_pCamera->setLensProjection(28, 1.0, 0.1, 100.0);
-  m_pCamera->setScaling({ 1.0 / aspectRatio, 1.0 });
-  m_pMainView->setCamera(m_pCamera);
-  m_pMainView->setViewport({ 0, 0, width, height });
-}
-
-bool
 CFilamentRenderer::execute()
 {
-  filament::math::float3 eye, center, up;
-  m_pCameraManipulator->getLookAt(&eye, &center, &up);
-  m_pCamera->lookAt(eye, center, up);
-
-  if (m_pRenderer->beginFrame(m_pSwapChain)) {
-    m_pRenderer->render(m_pMainView);
+  if (m_pRenderer->beginFrame(m_pSwapChain.get())) {
+    m_pRenderer->render(m_pMainView.get());
     m_pRenderer->endFrame();
   }
-  return true;
+}
+
+COperator&
+CFilamentRenderer::cameraOperator()
+{
+  return *m_pOperator.get();
 }

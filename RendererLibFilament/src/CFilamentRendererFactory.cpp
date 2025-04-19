@@ -1,10 +1,9 @@
-#include <CFilamentRendererFactory.h>
+#include "CFilamentRendererFactory.h"
+#include "CFilamentRendererFacade.h"
 
-#include <CFilamentRenderer.h>
-
-std::unique_ptr<IRenderer>
+std::unique_ptr<IRendererFacade>
 CFilamentRendererFactory::create()
 {
-  return std::make_unique<CFilamentRenderer>();
+  return std::make_unique<CFilamentRendererFacade>();
   ;
 }

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <Vector2D.h>
+#include <Structures.h>
 
 class IMouseCursorHandler
 {
 public:
   virtual ~IMouseCursorHandler() = default;
 
-  virtual void handleMousePress(const IntVector2D&) = 0;
-  virtual void handleMouseRelease(const IntVector2D&) = 0;
-  virtual void handleMouseMove(const IntVector2D&) = 0;
+  virtual void handleMousePress(const IntPoint2D&) = 0;
+  virtual void handleMouseRelease(const IntPoint2D&) = 0;
+  virtual void handleMouseMove(const IntPoint2D&) = 0;
 };

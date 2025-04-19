@@ -31,9 +31,14 @@ generate_export_header(${PROJECT_NAME}
          EXPORT_FILE_NAME ${EXPORT_FILE})
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/${EXPORT_FILE} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HEADER_DIRECTORY})
 
-set(SOURCES ${ROOT_SRC}/CFilamentRenderer.cpp
+set(SOURCES ${ROOT_SRC}/CFilamentRendererFacade.cpp
+            ${ROOT_SRC}/CFilamentRenderer.cpp
             ${ROOT_SRC}/CFilamentRendererFactory.cpp            
             ${ROOT_SRC}/CMouseCursorHandler.cpp            
+            ${ROOT_SRC}/COperator.cpp          
+            ${ROOT_SRC}/FilamentComponentCleaner.cpp        
+            ${ROOT_SRC}/CCamera.cpp        
+            ${ROOT_SRC}/CEntity.cpp        
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
