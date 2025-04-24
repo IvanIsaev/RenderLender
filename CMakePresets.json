@@ -5,7 +5,6 @@
       "name": "debug",
       "displayName": "Debug configuration",
       "inherits": "Base",
-      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "FILAMENT_LIBS_PATH": "$env{FILAMENT_DEBUG_LIBS_PATH}"
@@ -14,16 +13,16 @@
     {
       "name": "release",
       "displayName": "Release configuration",
-      "inherits": "Base",
-      "generator": "Ninja",
+      "inherits": "Base",      
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "FILAMENT_LIBS_PATH": ""
+        "FILAMENT_LIBS_PATH": "$env{FILAMENT_RELEASE_LIBS_PATH}"
       }
     },
     {
       "hidden": true,
       "name": "Base",
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "/DWIN32 /D_WINDOWS /W3 /GR /EHsc",
         "QT_QML_DEBUG": "OFF"
