@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FilamentComponentCleaner.h"
+#include "CFilamentComponentCleaner.h"
 
 #include <utils/Entity.h>
 

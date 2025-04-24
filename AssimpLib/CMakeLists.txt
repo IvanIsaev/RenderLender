@@ -31,7 +31,7 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 find_package(Assimp REQUIRED)
 target_link_libraries(${PROJECT_NAME} assimp::assimp)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
 
 #Hack to place this dll to the same folder as exe

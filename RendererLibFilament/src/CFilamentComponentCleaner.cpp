@@ -1,4 +1,4 @@
-#include "FilamentComponentCleaner.h"
+#include "CFilamentComponentCleaner.h"
 #include "CCamera.h"
 #include "CEntity.h"
 

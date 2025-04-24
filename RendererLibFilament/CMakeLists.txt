@@ -15,11 +15,6 @@ set(PUBLIC_HEADER_DIRECTORY include)
 set(ROOT_SRC src)
 
 set(FILAMENT_INCLUDE_PATH $ENV{FILAMENT_INCLUDE_PATH})
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(FILAMENT_LIBS_PATH $ENV{FILAMENT_DEBUG_LIBS_PATH})
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(FILAMENT_LIBS_PATH $ENV{FILAMENT_RELEASE_LIBS_PATH})
-endif()
 
 if((FILAMENT_INCLUDE_PATH STREQUAL "") OR (FILAMENT_LIBS_PATH STREQUAL ""))
     message( FATAL_ERROR "Ooops, set path to filament libs, please" )
@@ -36,15 +31,14 @@ set(SOURCES ${ROOT_SRC}/CFilamentRendererFacade.cpp
             ${ROOT_SRC}/CFilamentRendererFactory.cpp            
             ${ROOT_SRC}/CMouseCursorHandler.cpp            
             ${ROOT_SRC}/COperator.cpp          
-            ${ROOT_SRC}/FilamentComponentCleaner.cpp        
+            ${ROOT_SRC}/CFilamentComponentCleaner.cpp        
             ${ROOT_SRC}/CCamera.cpp        
             ${ROOT_SRC}/CEntity.cpp        
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} 
-${PRIVATE_HEADER_DIRECTORY} 
-${FILAMENT_INCLUDE_PATH})
+target_include_directories(${PROJECT_NAME} PRIVATE  ${PRIVATE_HEADER_DIRECTORY} 
+                                                    ${FILAMENT_INCLUDE_PATH})
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 
@@ -64,7 +58,7 @@ include(FindVulkan)
 find_package(Vulkan REQUIRED COMPONENTS shaderc_combined)
 target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0
                                                                             _SILENCE_CXX23_DENORM_DEPRECATION_WARNING)
 
