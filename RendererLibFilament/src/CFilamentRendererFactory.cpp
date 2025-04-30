@@ -5,5 +5,4 @@ std::unique_ptr<IRendererFacade>
 CFilamentRendererFactory::create()
 {
   return std::make_unique<CFilamentRendererFacade>();
-  ;
 }

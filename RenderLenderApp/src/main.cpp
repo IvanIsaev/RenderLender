@@ -1,20 +1,24 @@
 #include <CApplicationFactory.h>
-#include <CAssimp.h>
+#include <CSceneImporterFactory.h>
 #include <CFilamentRendererFactory.h>
 #include <CInterfaceFactory.h>
-
-#include <RenderConfig.h>
 
 #include <IOperationCreatingRenderWindow.h>
 #include <IRenderArea.h>
 #include <IRenderWindow.h>
+
+#include <RenderConfig.h>
+#include <Scene.h>
 
 #include <functional>
 
 int
 main(int argc, char* argv[])
 {
-  auto importManager = CAssimp{};
+  auto sceneImporterFactory =
+    CSceneImporterFactory{ "e:\\tmp\\cube\\cube.gltf" };
+  const auto pSceneImporter = sceneImporterFactory.create();
+  const auto pScene = pSceneImporter->import();
 
   auto pApplication = CApplicationFactory::create(argc, argv);
   auto pInterface = CInterfaceFactory::create();  
