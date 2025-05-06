@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SceneTypesFwd.h"
+#include <Matrix.h>
+#include <Point.h>
 
 #include <memory>
 #include <string>
@@ -22,7 +23,7 @@ struct Face
 struct Mesh
 {
   std::vector<Face> faces;
-  std::vector<FloatPointXYZ> vertices;
+  std::vector<FloatPoint3D> vertices;
 };
 
 struct Scene

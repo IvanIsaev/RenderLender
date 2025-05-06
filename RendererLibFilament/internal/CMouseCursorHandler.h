@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Structures.h>
+#include <Point.h>
 
 #include <IMouseCursorHandler.h>
 
@@ -13,9 +13,9 @@ public:
   explicit CMouseCursorHandler(IRendererFacade*, COperator&);
   virtual ~CMouseCursorHandler() = default;
 
-  void handleMousePress(const IntPoint2D&) override;
-  void handleMouseRelease(const IntPoint2D&) override;
-  void handleMouseMove(const IntPoint2D&) override;
+  void handleMousePress(const UIntPoint2D&) override;
+  void handleMouseRelease(const UIntPoint2D&) override;
+  void handleMouseMove(const UIntPoint2D&) override;
 
 private:
   IRendererFacade* m_pRenderer;

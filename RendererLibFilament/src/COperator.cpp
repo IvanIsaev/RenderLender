@@ -15,10 +15,10 @@ COperator::COperator(CCameraUnique pCamera,
 }
 
 void
-COperator::setDefaultCameraSetting(const IntSize2D& windowSize)
+COperator::setDefaultCameraSetting(const UIntSize2D& windowSize)
 {
-  const auto width = windowSize.width;
-  const auto height = windowSize.height;
+  const auto width = windowSize.x();
+  const auto height = windowSize.y();
   const auto aspectRatio = double(width) / height;
 
   m_pCamera->setLensProjection(28, 1.0, 0.1, 100.0);

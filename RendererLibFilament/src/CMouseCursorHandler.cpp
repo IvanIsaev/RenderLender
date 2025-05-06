@@ -3,8 +3,6 @@
 
 #include <IRendererFacade.h>
 
-#include <Structures.h>
-
 #include <camutils/Manipulator.h>
 #include <filament/Camera.h>
 
@@ -18,16 +16,16 @@ CMouseCursorHandler::CMouseCursorHandler(IRendererFacade* pRenderer,
 }
 
 void
-CMouseCursorHandler::handleMousePress(const IntPoint2D& position)
+CMouseCursorHandler::handleMousePress(const UIntPoint2D& position)
 {
   if (m_pRenderer) {
-    m_cameraOperator.grabBegin(position.x, position.y, false);
+    m_cameraOperator.grabBegin(position.x(), position.y(), false);
     m_pRenderer->execute();
   }
 }
 
 void
-CMouseCursorHandler::handleMouseRelease(const IntPoint2D& position)
+CMouseCursorHandler::handleMouseRelease(const UIntPoint2D& position)
 {
   if (m_pRenderer) {
     m_cameraOperator.grabEnd();
@@ -36,10 +34,10 @@ CMouseCursorHandler::handleMouseRelease(const IntPoint2D& position)
 }
 
 void
-CMouseCursorHandler::handleMouseMove(const IntPoint2D& position)
+CMouseCursorHandler::handleMouseMove(const UIntPoint2D& position)
 {
   if (m_pRenderer) {
-    m_cameraOperator.grabUpdate(position.x, position.y);
+    m_cameraOperator.grabUpdate(position.x(), position.y());
     m_pRenderer->execute();
   }
 }

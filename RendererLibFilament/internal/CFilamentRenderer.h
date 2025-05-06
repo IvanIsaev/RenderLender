@@ -33,7 +33,7 @@ private:
                                 const filament::VertexBuffer*,
                                 const filament::IndexBuffer*);
   MaterialUnique createMaterial(EngineShared);
-  CameraManipulatorUnique createCameraManipulator(const IntSize2D&);
+  CameraManipulatorUnique createCameraManipulator(const UIntSize2D&);
 
 private:
   EngineShared m_pEngine;
