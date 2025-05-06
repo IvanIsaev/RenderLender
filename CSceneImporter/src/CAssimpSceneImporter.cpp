@@ -26,15 +26,15 @@ importFaces(std::span<aiFace> aiFaces)
          std::views::transform(toFace) | std::ranges::to<std::vector<Face>>();
 }
 
-std::vector<FloatPointXYZ>
+std::vector<FloatPoint3D>
 importVertices(std::span<aiVector3D> aiVertices)
 {
   const auto toVertex = [](const auto& aiVertex) {
-    return FloatPointXYZ(aiVertex.x, aiVertex.y, aiVertex.z);
+    return FloatPoint3D(aiVertex.x, aiVertex.y, aiVertex.z);
   };
 
   return aiVertices | std::views::transform(toVertex) |
-         std::ranges::to<std::vector<FloatPointXYZ>>();
+         std::ranges::to<std::vector<FloatPoint3D>>();
 }
 
 std::vector<Mesh>

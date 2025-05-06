@@ -2,13 +2,13 @@
 
 #include "CameraFwd.h"
 
-#include <Structures.h>
+#include <Size.h>
 
 class COperator
 {
 public:
   COperator(CCameraUnique, CameraManipulatorUnique);
-  void setDefaultCameraSetting(const IntSize2D& windowSize);
+  void setDefaultCameraSetting(const UIntSize2D& windowSize);
 
   void grabBegin(int x, int y, bool strafe);
   void grabUpdate(int x, int y);

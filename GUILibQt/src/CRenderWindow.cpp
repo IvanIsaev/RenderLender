@@ -5,18 +5,18 @@
 #include <QSize>
 
 namespace {
-IntSize2D
+UIntSize2D
 qSizeToSize2D(const QSize& size)
 {
-  return IntSize2D{ .width = static_cast<uint32_t>(size.width()),
-                    .height = static_cast<uint32_t>(size.height()) };
+  return UIntSize2D{ static_cast<uint32_t>(size.width()),
+                    static_cast<uint32_t>(size.height()) };
 }
 
-IntPoint2D
+UIntPoint2D
 qPointToSize2D(const QPoint& point)
 {
-  return IntPoint2D{ .x = static_cast<uint32_t>(point.x()),
-                     .y = static_cast<uint32_t>(point.y()) };
+  return UIntPoint2D{ static_cast<uint32_t>(point.x()),
+                      static_cast<uint32_t>(point.y()) };
 }
 }
 
@@ -33,7 +33,7 @@ CRenderWindow::nativeWindow() const
   return reinterpret_cast<void*>(QWidget::winId());
 }
 
-IntSize2D
+UIntSize2D
 CRenderWindow::size() const
 {
   return qSizeToSize2D(QWidget::size() * QWidget::devicePixelRatio());

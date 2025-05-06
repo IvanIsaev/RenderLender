@@ -17,7 +17,7 @@ public:
 
   void* nativeWindow() const override;
 
-  IntSize2D size() const override;
+  UIntSize2D size() const override;
 
   void trackMousePress(const SlotForMouseSignal&) const override;
   void trackMouseRelease(const SlotForMouseSignal&) const override;

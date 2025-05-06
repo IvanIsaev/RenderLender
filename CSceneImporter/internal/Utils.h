@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SceneTypesFwd.h>
+#include <Matrix.h>
 
 #include <assimp/matrix4x4.h>
 

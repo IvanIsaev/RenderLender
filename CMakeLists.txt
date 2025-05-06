@@ -7,7 +7,7 @@ add_subdirectory(Scene)
 add_subdirectory(ISceneImporter)
 add_subdirectory(CSceneImporter)
 
-add_subdirectory(Common)
+add_subdirectory(MathTypes)
 
 add_subdirectory(IGUIlib)
 add_subdirectory(GUILibQt)

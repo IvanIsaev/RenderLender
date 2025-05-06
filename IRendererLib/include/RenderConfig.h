@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Structures.h>
+#include <Size.h>
 
 struct RenderConfig
 {
   void* nativeWindow;
-  IntSize2D windowSize;
+  UIntSize2D windowSize;
 };

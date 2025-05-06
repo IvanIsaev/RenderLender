@@ -58,7 +58,7 @@ CFilamentRenderer::CFilamentRenderer()
   , m_pIndexBuffer(nullptr, FilamentComponentCleaner(nullptr))
   , m_pRenderable(nullptr, FilamentComponentCleaner(nullptr))
   , m_pMaterial(nullptr, FilamentComponentCleaner(nullptr))
-  ,m_pOperator(nullptr)
+  , m_pOperator(nullptr)
 {
 }
 
@@ -72,16 +72,17 @@ CFilamentRenderer::init(const RenderConfig& settings)
   m_pSwapChain = createSwapChain(m_pEngine, settings.nativeWindow);
   m_pMainView = createView(m_pEngine);
 
-  const auto width = settings.windowSize.width;
-  const auto height = settings.windowSize.height;
+  const auto width = settings.windowSize.x();
+  const auto height = settings.windowSize.y();
 
-  auto pCamera = createCamera(m_pEngine);  
+  auto pCamera = createCamera(m_pEngine);
   m_pMainView->setCamera(&pCamera->camera());
   m_pMainView->setViewport({ 0, 0, width, height });
 
   auto pCameraManipulator = createCameraManipulator(settings.windowSize);
 
-  m_pOperator = std::make_unique<COperator>(std::move(pCamera), std::move(pCameraManipulator));
+  m_pOperator = std::make_unique<COperator>(std::move(pCamera),
+                                            std::move(pCameraManipulator));
   m_pOperator->setDefaultCameraSetting(settings.windowSize);
   m_pOperator->updateCamera();
 
@@ -246,14 +247,13 @@ CFilamentRenderer::createMaterial(EngineShared pEngine)
 }
 
 CameraManipulatorUnique
-CFilamentRenderer::createCameraManipulator(const IntSize2D& windowSize)
+CFilamentRenderer::createCameraManipulator(const UIntSize2D& windowSize)
 {
-  return CameraManipulatorUnique(
-    CameraManipulator::Builder()
-      .viewport(windowSize.width, windowSize.height)
-      .targetPosition(0, 0, -10)
-      .flightMoveDamping(15.0)
-      .build(filament::camutils::Mode::ORBIT));
+  return CameraManipulatorUnique(CameraManipulator::Builder()
+                                   .viewport(windowSize.x(), windowSize.y())
+                                   .targetPosition(0, 0, -10)
+                                   .flightMoveDamping(15.0)
+                                   .build(filament::camutils::Mode::ORBIT));
 }
 
 void
