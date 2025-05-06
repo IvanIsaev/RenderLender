@@ -1,0 +1,43 @@
+
+#ifndef SCENEIMPORTERLIB_EXPORT_H
+#define SCENEIMPORTERLIB_EXPORT_H
+
+#ifdef SCENEIMPORTERLIB_STATIC_DEFINE
+#  define SCENEIMPORTERLIB_EXPORT
+#  define SCENEIMPORTERLIB_NO_EXPORT
+#else
+#  ifndef SCENEIMPORTERLIB_EXPORT
+#    ifdef SceneImporterLib_EXPORTS
+        /* We are building this library */
+#      define SCENEIMPORTERLIB_EXPORT __declspec(dllexport)
+#    else
+        /* We are using this library */
+#      define SCENEIMPORTERLIB_EXPORT __declspec(dllimport)
+#    endif
+#  endif
+
+#  ifndef SCENEIMPORTERLIB_NO_EXPORT
+#    define SCENEIMPORTERLIB_NO_EXPORT 
+#  endif
+#endif
+
+#ifndef SCENEIMPORTERLIB_DEPRECATED
+#  define SCENEIMPORTERLIB_DEPRECATED __declspec(deprecated)
+#endif
+
+#ifndef SCENEIMPORTERLIB_DEPRECATED_EXPORT
+#  define SCENEIMPORTERLIB_DEPRECATED_EXPORT SCENEIMPORTERLIB_EXPORT SCENEIMPORTERLIB_DEPRECATED
+#endif
+
+#ifndef SCENEIMPORTERLIB_DEPRECATED_NO_EXPORT
+#  define SCENEIMPORTERLIB_DEPRECATED_NO_EXPORT SCENEIMPORTERLIB_NO_EXPORT SCENEIMPORTERLIB_DEPRECATED
+#endif
+
+/* NOLINTNEXTLINE(readability-avoid-unconditional-preprocessor-if) */
+#if 0 /* DEFINE_NO_DEPRECATED */
+#  ifndef SCENEIMPORTERLIB_NO_DEPRECATED
+#    define SCENEIMPORTERLIB_NO_DEPRECATED
+#  endif
+#endif
+
+#endif /* SCENEIMPORTERLIB_EXPORT_H */
