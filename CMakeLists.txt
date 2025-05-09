@@ -4,15 +4,15 @@ project(RenderLender VERSION 1.0 DESCRIPTION "Library for rendering" LANGUAGES C
 
 add_subdirectory(Scene)
 
-add_subdirectory(ISceneImporter)
-add_subdirectory(CSceneImporter)
+add_subdirectory(ISceneImporterLib)
+add_subdirectory(SceneImporterLib)
 
 add_subdirectory(MathTypes)
 
 add_subdirectory(IGUIlib)
-add_subdirectory(GUILibQt)
+add_subdirectory(GUIQtLib)
 
 add_subdirectory(IRendererLib)
-add_subdirectory(RendererLibFilament)
+add_subdirectory(RendererFilamentLib)
 
 add_subdirectory(RenderLenderApp)

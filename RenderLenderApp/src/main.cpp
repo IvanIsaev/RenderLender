@@ -1,14 +1,17 @@
-#include <CApplicationFactory.h>
-#include <CSceneImporterFactory.h>
-#include <CFilamentRendererFactory.h>
-#include <CInterfaceFactory.h>
+#include <GUIQt/CApplicationFactory.h>
+#include <GUIQt/CInterfaceFactory.h>
 
-#include <IOperationCreatingRenderWindow.h>
-#include <IRenderArea.h>
-#include <IRenderWindow.h>
+#include <RendererFilament/CFilamentRendererFactory.h>
 
-#include <RenderConfig.h>
-#include <Scene.h>
+#include <Sceneimporter/CSceneImporterFactory.h>
+
+#include <IGUI/IOperationCreatingRenderWindow.h>
+#include <IGUI/IRenderArea.h>
+#include <IGUI/IRenderWindow.h>
+
+#include <IRenderer/RenderConfig.h>
+
+#include <Scene/Scene.h>
 
 #include <functional>
 
@@ -21,7 +24,7 @@ main(int argc, char* argv[])
   const auto pScene = pSceneImporter->import();
 
   auto pApplication = CApplicationFactory::create(argc, argv);
-  auto pInterface = CInterfaceFactory::create();  
+  auto pInterface = CInterfaceFactory::create();
 
   pInterface->init();
   pInterface->show();
@@ -38,7 +41,8 @@ main(int argc, char* argv[])
 
   const auto windowSize = pLastWindow->size();
   const auto nativeWindow = pLastWindow->nativeWindow();
-  const auto config = RenderConfig{ .nativeWindow = nativeWindow, .windowSize = windowSize };
+  const auto config =
+    RenderConfig{ .nativeWindow = nativeWindow, .windowSize = windowSize };
 
   auto pRenderer = CFilamentRendererFactory::create();
   pRenderer->init(config);
@@ -47,13 +51,14 @@ main(int argc, char* argv[])
   pLastWindow->trackMousePress(std::bind(&IMouseCursorHandler::handleMousePress,
                                          pMouseCursorHandler,
                                          std::placeholders::_1));
-  pLastWindow->trackMouseRelease(std::bind(&IMouseCursorHandler::handleMouseRelease,
-                                         pMouseCursorHandler,
-                                         std::placeholders::_1));
+  pLastWindow->trackMouseRelease(
+    std::bind(&IMouseCursorHandler::handleMouseRelease,
+              pMouseCursorHandler,
+              std::placeholders::_1));
   pLastWindow->trackMouseMove(std::bind(&IMouseCursorHandler::handleMouseMove,
-                                         pMouseCursorHandler,
-                                         std::placeholders::_1));
-  
+                                        pMouseCursorHandler,
+                                        std::placeholders::_1));
+
   pRenderer->execute();
 
   return pApplication->execute();
