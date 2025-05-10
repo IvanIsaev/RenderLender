@@ -10,12 +10,12 @@
 
 #include <string>
 
-class CAssimpSceneImporter : public ISceneImporter
+class CAssimpSceneImporter : public ISceneImporter::ISceneImporter
 {
 public:
   explicit CAssimpSceneImporter(const std::string&);
 
-  SceneUnique import() const override;
+  Scene::SceneUnique import() const override;
 
 private:
   const std::string m_absolutePathToFile;

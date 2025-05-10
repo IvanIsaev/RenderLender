@@ -7,13 +7,14 @@
 
 #include <IRenderer/RenderConfig.h>
 
+namespace RendererFilament {
 class CFilamentRenderer
 {
 public:
   CFilamentRenderer();
   ~CFilamentRenderer();
 
-  void init(const RenderConfig&);
+  void init(const IRenderer::RenderConfig&);
 
   void execute();
 
@@ -33,7 +34,7 @@ private:
                                 const filament::VertexBuffer*,
                                 const filament::IndexBuffer*);
   MaterialUnique createMaterial(EngineShared);
-  CameraManipulatorUnique createCameraManipulator(const UIntSize2D&);
+  CameraManipulatorUnique createCameraManipulator(const MathTypes::UIntSize2D&);
 
 private:
   EngineShared m_pEngine;
@@ -48,3 +49,4 @@ private:
   MaterialUnique m_pMaterial;
   OperatorUnique m_pOperator;
 };
+}

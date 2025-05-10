@@ -4,18 +4,20 @@
 #include <QPoint>
 #include <QSize>
 
+using namespace GUIQt;
+
 namespace {
-UIntSize2D
+MathTypes::UIntSize2D
 qSizeToSize2D(const QSize& size)
 {
-  return UIntSize2D{ static_cast<uint32_t>(size.width()),
-                    static_cast<uint32_t>(size.height()) };
+  return MathTypes::UIntSize2D{ static_cast<uint32_t>(size.width()),
+                     static_cast<uint32_t>(size.height()) };
 }
 
-UIntPoint2D
+MathTypes::UIntPoint2D
 qPointToSize2D(const QPoint& point)
 {
-  return UIntPoint2D{ static_cast<uint32_t>(point.x()),
+  return MathTypes::UIntPoint2D{ static_cast<uint32_t>(point.x()),
                       static_cast<uint32_t>(point.y()) };
 }
 }
@@ -33,7 +35,7 @@ CRenderWindow::nativeWindow() const
   return reinterpret_cast<void*>(QWidget::winId());
 }
 
-UIntSize2D
+MathTypes::UIntSize2D
 CRenderWindow::size() const
 {
   return qSizeToSize2D(QWidget::size() * QWidget::devicePixelRatio());

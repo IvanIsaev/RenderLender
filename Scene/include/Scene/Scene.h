@@ -7,11 +7,12 @@
 #include <string>
 #include <vector>
 
+namespace Scene {
 struct Node
 {
   std::vector<Node*> children;
   std::vector<unsigned int> meshesIds;
-  FloatMatrix4x4 transformation;
+  MathTypes::FloatMatrix4x4 transformation;
   std::string name;
 };
 
@@ -23,7 +24,7 @@ struct Face
 struct Mesh
 {
   std::vector<Face> faces;
-  std::vector<FloatPoint3D> vertices;
+  std::vector<MathTypes::FloatPoint3D> vertices;
 };
 
 struct Scene
@@ -34,3 +35,4 @@ struct Scene
 };
 
 using SceneUnique = std::unique_ptr<Scene>;
+}

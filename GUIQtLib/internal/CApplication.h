@@ -4,9 +4,10 @@
 
 #include <QtWidgets/QApplication>
 
+namespace GUIQt {
 class CApplication
   : public QApplication
-  , public IApplication
+  , public IGUI::IApplication
 {
   Q_OBJECT
 
@@ -17,3 +18,4 @@ public:
   // Inherited via IApplication
   bool execute() override;
 };
+}

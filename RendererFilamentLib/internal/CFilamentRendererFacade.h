@@ -7,15 +7,16 @@
 
 #include <memory>
 
-class CFilamentRendererFacade : public IRendererFacade
+namespace RendererFilament {
+class CFilamentRendererFacade : public IRenderer::IRendererFacade
 {
 public:
   CFilamentRendererFacade();
   ~CFilamentRendererFacade() = default;
 
-  void init(const RenderConfig&) override;
+  void init(const IRenderer::RenderConfig&) override;
 
-  IMouseCursorHandler* mouseCursorHandler() override;
+  IRenderer::IMouseCursorHandler* mouseCursorHandler() override;
 
   void execute() override;
 
@@ -23,3 +24,4 @@ private:
   std::unique_ptr<CFilamentRenderer> m_pFilamentRenderer;
   std::unique_ptr<CMouseCursorHandler> m_pMouseCursorHandler;
 };
+}

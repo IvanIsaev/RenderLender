@@ -10,7 +10,7 @@
 #include <span>
 
 namespace {
-std::vector<Face>
+std::vector<Scene::Face>
 importFaces(std::span<aiFace> aiFaces)
 {
   const auto toSpan = [](const auto& aiFace) {
@@ -18,30 +18,31 @@ importFaces(std::span<aiFace> aiFaces)
   };
 
   const auto toFace = [](auto aiFaceSpan) {
-    return Face{ .verticesId = std::vector<unsigned int>(aiFaceSpan.begin(),
-                                                         aiFaceSpan.end()) };
+    return Scene::Face{ .verticesId = std::vector<unsigned int>(
+                          aiFaceSpan.begin(), aiFaceSpan.end()) };
   };
 
   return aiFaces | std::views::transform(toSpan) |
-         std::views::transform(toFace) | std::ranges::to<std::vector<Face>>();
+         std::views::transform(toFace) |
+         std::ranges::to<std::vector<Scene::Face>>();
 }
 
-std::vector<FloatPoint3D>
+std::vector<MathTypes::FloatPoint3D>
 importVertices(std::span<aiVector3D> aiVertices)
 {
   const auto toVertex = [](const auto& aiVertex) {
-    return FloatPoint3D(aiVertex.x, aiVertex.y, aiVertex.z);
+    return MathTypes::FloatPoint3D(aiVertex.x, aiVertex.y, aiVertex.z);
   };
 
   return aiVertices | std::views::transform(toVertex) |
-         std::ranges::to<std::vector<FloatPoint3D>>();
+         std::ranges::to<std::vector<MathTypes::FloatPoint3D>>();
 }
 
-std::vector<Mesh>
+std::vector<Scene::Mesh>
 importMeshes(std::span<aiMesh*> aiMeshes)
 {
   const auto toMesh = [](const auto pAiMesh) {
-    auto mesh = Mesh{};
+    auto mesh = Scene::Mesh{};
 
     mesh.faces = importFaces({ pAiMesh->mFaces, pAiMesh->mNumFaces });
     mesh.vertices =
@@ -51,11 +52,11 @@ importMeshes(std::span<aiMesh*> aiMeshes)
   };
 
   return aiMeshes | std::views::transform(toMesh) |
-         std::ranges::to<std::vector<Mesh>>();
+         std::ranges::to<std::vector<Scene::Mesh>>();
 }
 
 void
-importNode(const aiNode* pAssimpNode, Node& pNode, Scene& scene)
+importNode(const aiNode* pAssimpNode, Scene::Node& pNode, Scene::Scene& scene)
 {
   pNode.meshesIds = std::vector<unsigned int>(
     pAssimpNode->mMeshes, pAssimpNode->mMeshes + pAssimpNode->mNumMeshes);
@@ -70,16 +71,18 @@ importNode(const aiNode* pAssimpNode, Node& pNode, Scene& scene)
   pNode.children.reserve(numChildren);
 
   for (auto childIndex = 0u; childIndex < numChildren; ++childIndex) {
-    auto pChildNode = scene.nodes.emplace_back(std::make_unique<Node>()).get();
+    auto pChildNode =
+      scene.nodes.emplace_back(std::make_unique<Scene::Node>()).get();
     importNode(pAssimpNode->mChildren[childIndex], *pChildNode, scene);
     pNode.children.push_back(pChildNode);
   }
 }
 
 void
-importNodes(const aiScene* pAssimpScene, Scene& scene)
+importNodes(const aiScene* pAssimpScene, Scene::Scene& scene)
 {
-  auto pRootNode = scene.nodes.emplace_back(std::make_unique<Node>()).get();
+  auto pRootNode =
+    scene.nodes.emplace_back(std::make_unique<Scene::Node>()).get();
   scene.root = pRootNode;
   importNode(pAssimpScene->mRootNode, *pRootNode, scene);
 }
@@ -91,7 +94,7 @@ CAssimpSceneImporter::CAssimpSceneImporter(
 {
 }
 
-SceneUnique
+Scene::SceneUnique
 CAssimpSceneImporter::import() const
 {
   auto importer = Assimp::Importer{};
@@ -100,7 +103,7 @@ CAssimpSceneImporter::import() const
                       aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
                         aiProcess_SortByPType);
 
-  auto pScene = std::make_unique<Scene>();
+  auto pScene = std::make_unique<Scene::Scene>();
 
   importNodes(pAssimpScene, *pScene.get());
 

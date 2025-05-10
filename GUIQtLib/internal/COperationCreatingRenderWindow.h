@@ -5,15 +5,18 @@
 class IRenderWindow;
 class QTabWidget;
 
-class COperationCreatingRenderWindow : public IOperationCreatingRenderWindow
+namespace GUIQt {
+class COperationCreatingRenderWindow
+  : public IGUI::IOperationCreatingRenderWindow
 {
 public:
   explicit COperationCreatingRenderWindow(QTabWidget&);
 
   void addRenderWindow(std::string_view) override;
-  IRenderWindow* lastAddedRenderWindow() override;
+  IGUI::IRenderWindow* lastAddedRenderWindow() override;
 
 private:
   QTabWidget& m_windowCollection;
-  IRenderWindow* m_lastAddedRenderWindow;
+  IGUI::IRenderWindow* m_lastAddedRenderWindow;
 };
+}

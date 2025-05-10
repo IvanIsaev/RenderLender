@@ -6,9 +6,10 @@
 
 class QMouseEvent;
 
+namespace GUIQt {
 class CRenderWindow
   : public QWidget
-  , public IRenderWindow
+  , public IGUI::IRenderWindow
 {
   Q_OBJECT
 
@@ -17,7 +18,7 @@ public:
 
   void* nativeWindow() const override;
 
-  UIntSize2D size() const override;
+  MathTypes::UIntSize2D size() const override;
 
   void trackMousePress(const SlotForMouseSignal&) const override;
   void trackMouseRelease(const SlotForMouseSignal&) const override;
@@ -35,3 +36,4 @@ private:
   mutable MouseSignal m_mouseReleasedSignal;
   mutable MouseSignal m_mouseMovedSignal;
 };
+}

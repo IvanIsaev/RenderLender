@@ -12,6 +12,7 @@ namespace filament {
 class Camera;
 }
 
+namespace RendererFilament {
 class CCamera
 {
 public:
@@ -35,4 +36,4 @@ private:
   filament::Camera* const m_pCamera;
   const utils::Entity m_cameraId;
 };
-
+}

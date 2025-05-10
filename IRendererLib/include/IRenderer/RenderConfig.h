@@ -2,8 +2,10 @@
 
 #include <MathTypes/Size.h>
 
+namespace IRenderer {
 struct RenderConfig
 {
   void* nativeWindow;
-  UIntSize2D windowSize;
+  MathTypes::UIntSize2D windowSize;
 };
+}

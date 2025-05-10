@@ -8,9 +8,10 @@
 
 #include <QtWidgets/QMainWindow>
 
+namespace GUIQt {
 class CMainWindow
   : public QMainWindow
-  , public IInterface
+  , public IGUI::IInterface
 {
   Q_OBJECT
 
@@ -22,10 +23,11 @@ public:
   void init() override;
   void show() override;
 
-  IRenderArea* renderArea() override;
+  IGUI::IRenderArea* renderArea() override;
 
 private:
   Ui::CMainWindowClass ui;
 
   CRenderArea* m_renderArea;
 };
+}

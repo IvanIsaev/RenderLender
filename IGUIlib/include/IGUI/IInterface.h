@@ -1,7 +1,10 @@
 #pragma once
 
+namespace IGUI {
 class IRenderArea;
+}
 
+namespace IGUI {
 class IInterface
 {
 public:
@@ -12,3 +15,4 @@ public:
 
   virtual IRenderArea* renderArea() = 0;
 };
+}

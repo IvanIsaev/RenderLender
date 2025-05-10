@@ -11,7 +11,7 @@ class CSceneImporterFactory
 public:
   SCENEIMPORTERLIB_EXPORT explicit CSceneImporterFactory(const std::string&);
 
-  SCENEIMPORTERLIB_EXPORT ISceneImporterUnique create() const;
+  SCENEIMPORTERLIB_EXPORT ISceneImporter::ISceneImporterUnique create() const;
 
 private:
   const std::string m_absolutePathToFile;
