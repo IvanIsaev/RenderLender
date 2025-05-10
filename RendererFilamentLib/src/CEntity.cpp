@@ -1,5 +1,7 @@
 #include "CEntity.h"
 
+using namespace RendererFilament;
+
 CEntity::CEntity(utils::Entity entity)
   : m_entity(entity)
 {

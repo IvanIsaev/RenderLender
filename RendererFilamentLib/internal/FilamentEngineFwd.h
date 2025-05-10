@@ -2,9 +2,10 @@
 
 #include <memory>
 
-namespace filament
-{
+namespace filament {
 class Engine;
 }
 
+namespace RendererFilament {
 using EngineShared = std::shared_ptr<filament::Engine>;
+}

@@ -1,9 +1,9 @@
 #include "Utils.h"
 
-FloatMatrix4x4
+MathTypes::FloatMatrix4x4
 SceneImporter::convertMatrix(const aiMatrix4x4& mat)
 {
-  FloatMatrix4x4 outMat;
+  MathTypes::FloatMatrix4x4 outMat;
 
   using namespace boost::qvm;
   A00(outMat) = mat.a1;

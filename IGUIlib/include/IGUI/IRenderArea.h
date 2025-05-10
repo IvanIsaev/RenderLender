@@ -3,8 +3,11 @@
 #include <memory>
 #include <string_view>
 
+namespace IGUI {
 class IOperationCreatingRenderWindow;
+}
 
+namespace IGUI {
 class IRenderArea
 {
 public:
@@ -13,3 +16,4 @@ public:
   virtual std::unique_ptr<IOperationCreatingRenderWindow>
   operationForCreatingRenderWindow() = 0;
 };
+}

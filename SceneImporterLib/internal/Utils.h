@@ -6,6 +6,6 @@
 
 namespace SceneImporter
 {
-FloatMatrix4x4
+MathTypes::FloatMatrix4x4
 convertMatrix(const aiMatrix4x4& mat);
 }

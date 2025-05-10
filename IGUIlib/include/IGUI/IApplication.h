@@ -1,5 +1,6 @@
 #pragma once
 
+namespace IGUI {
 class IApplication
 {
 public:
@@ -7,3 +8,4 @@ public:
 
   virtual bool execute() = 0;
 };
+}

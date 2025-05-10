@@ -3,6 +3,8 @@
 
 #include <QTabWidget>
 
+using namespace GUIQt;
+
 COperationCreatingRenderWindow::COperationCreatingRenderWindow(
   QTabWidget& windowCollection)
   : m_windowCollection(windowCollection)
@@ -20,7 +22,7 @@ COperationCreatingRenderWindow::addRenderWindow(std::string_view title)
   m_lastAddedRenderWindow = pRenderWindow;
 }
 
-IRenderWindow*
+IGUI::IRenderWindow*
 COperationCreatingRenderWindow::lastAddedRenderWindow()
 {
   return m_lastAddedRenderWindow;

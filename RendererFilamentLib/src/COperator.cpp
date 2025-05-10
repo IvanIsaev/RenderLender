@@ -7,6 +7,8 @@
 
 #include <memory>
 
+using namespace RendererFilament;
+
 COperator::COperator(CCameraUnique pCamera,
                      CameraManipulatorUnique pCameraManipulator)
   : m_pCamera(std::move(pCamera))
@@ -15,7 +17,7 @@ COperator::COperator(CCameraUnique pCamera,
 }
 
 void
-COperator::setDefaultCameraSetting(const UIntSize2D& windowSize)
+COperator::setDefaultCameraSetting(const MathTypes::UIntSize2D& windowSize)
 {
   const auto width = windowSize.x();
   const auto height = windowSize.y();

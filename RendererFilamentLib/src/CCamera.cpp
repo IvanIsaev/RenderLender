@@ -2,6 +2,8 @@
 
 #include <filament/Camera.h>
 
+using namespace RendererFilament;
+
 CCamera::CCamera(filament::Camera* pCamera, utils::Entity cameraId)
   : m_pCamera(pCamera)
   , m_cameraId(cameraId)

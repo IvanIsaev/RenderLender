@@ -2,6 +2,8 @@
 
 #include <QHBoxLayout>
 
+using namespace GUIQt;
+
 CMainWindow::CMainWindow(QWidget* parent)
   : QMainWindow(parent)
   , m_renderArea(nullptr)
@@ -29,7 +31,7 @@ CMainWindow::show()
   QMainWindow::show();
 }
 
-IRenderArea*
+IGUI::IRenderArea*
 CMainWindow::renderArea()
 {
   return m_renderArea;

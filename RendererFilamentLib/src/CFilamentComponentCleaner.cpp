@@ -4,6 +4,8 @@
 
 #include <utils/EntityManager.h>
 
+using namespace RendererFilament;
+
 FilamentComponentCleaner::FilamentComponentCleaner(EngineShared pEngine)
   : m_pEngine(pEngine)
 {

@@ -2,7 +2,9 @@
 #include "COperationCreatingRenderWindow.h"
 #include "CRenderWindow.h"
 
-std::unique_ptr<IOperationCreatingRenderWindow>
+using namespace GUIQt;
+
+std::unique_ptr<IGUI::IOperationCreatingRenderWindow>
 CRenderArea::operationForCreatingRenderWindow()
 {
   return std::make_unique<COperationCreatingRenderWindow>(*this);

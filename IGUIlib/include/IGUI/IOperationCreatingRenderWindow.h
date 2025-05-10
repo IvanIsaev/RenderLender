@@ -2,8 +2,11 @@
 
 #include <string_view>
 
+namespace IGUI {
 class IRenderWindow;
+}
 
+namespace IGUI {
 class IOperationCreatingRenderWindow
 {
 public:
@@ -12,3 +15,4 @@ public:
   virtual void addRenderWindow(std::string_view) = 0;
   virtual IRenderWindow* lastAddedRenderWindow() = 0;
 };
+}

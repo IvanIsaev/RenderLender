@@ -28,6 +28,7 @@
 #include <numbers>
 
 using namespace filament;
+using namespace RendererFilament;
 
 namespace {
 struct Vertex
@@ -65,7 +66,7 @@ CFilamentRenderer::CFilamentRenderer()
 CFilamentRenderer::~CFilamentRenderer() {}
 
 void
-CFilamentRenderer::init(const RenderConfig& settings)
+CFilamentRenderer::init(const IRenderer::RenderConfig& settings)
 {
   m_pEngine = createEngine();
   m_pRenderer = createRenderer(m_pEngine);
@@ -247,7 +248,8 @@ CFilamentRenderer::createMaterial(EngineShared pEngine)
 }
 
 CameraManipulatorUnique
-CFilamentRenderer::createCameraManipulator(const UIntSize2D& windowSize)
+CFilamentRenderer::createCameraManipulator(
+  const MathTypes::UIntSize2D& windowSize)
 {
   return CameraManipulatorUnique(CameraManipulator::Builder()
                                    .viewport(windowSize.x(), windowSize.y())

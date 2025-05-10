@@ -6,8 +6,10 @@
 
 #include <memory>
 
+namespace RendererFilament {
 class RENDERERFILAMENTLIB_EXPORT CFilamentRendererFactory
 {
 public:
-  static std::unique_ptr<IRendererFacade> create();
+  static std::unique_ptr<IRenderer::IRendererFacade> create();
 };
+}

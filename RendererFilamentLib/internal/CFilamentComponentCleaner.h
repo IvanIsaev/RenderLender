@@ -4,9 +4,12 @@
 
 #include <filament/Engine.h>
 
+namespace RendererFilament {
 class CCamera;
 class CEntity;
+}
 
+namespace RendererFilament {
 class FilamentComponentCleaner
 {
 public:
@@ -19,8 +22,9 @@ public:
   }
 
   void operator()(CCamera*);
-  void operator()(CEntity*);  
+  void operator()(CEntity*);
 
 private:
   EngineShared m_pEngine;
 };
+}

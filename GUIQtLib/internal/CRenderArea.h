@@ -4,13 +4,15 @@
 
 #include <QtWidgets/QTabWidget>
 
+namespace GUIQt {
 class CRenderArea
   : public QTabWidget
-  , public IRenderArea
+  , public IGUI::IRenderArea
 {
   Q_OBJECT
 
 public:
-  std::unique_ptr<IOperationCreatingRenderWindow>
+  std::unique_ptr<IGUI::IOperationCreatingRenderWindow>
   operationForCreatingRenderWindow() override;
 };
+}

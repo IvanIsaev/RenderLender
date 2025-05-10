@@ -8,7 +8,7 @@ CSceneImporterFactory::CSceneImporterFactory(
 {
 }
 
-ISceneImporterUnique
+ISceneImporter::ISceneImporterUnique
 CSceneImporterFactory::create() const
 {
   return std::make_unique<CAssimpSceneImporter>(m_absolutePathToFile);

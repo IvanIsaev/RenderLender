@@ -8,7 +8,9 @@
 
 #include <iostream>
 
-CMouseCursorHandler::CMouseCursorHandler(IRendererFacade* pRenderer,
+using namespace RendererFilament;
+
+CMouseCursorHandler::CMouseCursorHandler(IRenderer::IRendererFacade* pRenderer,
                                          COperator& cameraOperator)
   : m_pRenderer(pRenderer)
   , m_cameraOperator(cameraOperator)
@@ -16,7 +18,7 @@ CMouseCursorHandler::CMouseCursorHandler(IRendererFacade* pRenderer,
 }
 
 void
-CMouseCursorHandler::handleMousePress(const UIntPoint2D& position)
+CMouseCursorHandler::handleMousePress(const MathTypes::UIntPoint2D& position)
 {
   if (m_pRenderer) {
     m_cameraOperator.grabBegin(position.x(), position.y(), false);
@@ -25,7 +27,7 @@ CMouseCursorHandler::handleMousePress(const UIntPoint2D& position)
 }
 
 void
-CMouseCursorHandler::handleMouseRelease(const UIntPoint2D& position)
+CMouseCursorHandler::handleMouseRelease(const MathTypes::UIntPoint2D& position)
 {
   if (m_pRenderer) {
     m_cameraOperator.grabEnd();
@@ -34,7 +36,7 @@ CMouseCursorHandler::handleMouseRelease(const UIntPoint2D& position)
 }
 
 void
-CMouseCursorHandler::handleMouseMove(const UIntPoint2D& position)
+CMouseCursorHandler::handleMouseMove(const MathTypes::UIntPoint2D& position)
 {
   if (m_pRenderer) {
     m_cameraOperator.grabUpdate(position.x(), position.y());

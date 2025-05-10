@@ -4,6 +4,7 @@
 
 #include <utils/Entity.h>
 
+namespace RendererFilament {
 class CEntity
 {
 public:
@@ -14,4 +15,4 @@ public:
 private:
   const utils::Entity m_entity;
 };
-
+}

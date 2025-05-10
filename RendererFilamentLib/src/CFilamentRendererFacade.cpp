@@ -1,5 +1,7 @@
 #include "CFilamentRendererFacade.h"
 
+using namespace RendererFilament;
+
 CFilamentRendererFacade::CFilamentRendererFacade()
   : m_pFilamentRenderer(std::make_unique<CFilamentRenderer>())
   , m_pMouseCursorHandler(nullptr)
@@ -7,7 +9,7 @@ CFilamentRendererFacade::CFilamentRendererFacade()
 }
 
 void
-CFilamentRendererFacade::init(const RenderConfig& settings)
+CFilamentRendererFacade::init(const IRenderer::RenderConfig& settings)
 {
   m_pFilamentRenderer->init(settings);
 
@@ -16,7 +18,7 @@ CFilamentRendererFacade::init(const RenderConfig& settings)
     std::make_unique<CMouseCursorHandler>(this, cameraOperator);
 }
 
-IMouseCursorHandler*
+IRenderer::IMouseCursorHandler*
 CFilamentRendererFacade::mouseCursorHandler()
 {
   return m_pMouseCursorHandler.get();

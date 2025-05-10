@@ -3,6 +3,7 @@
 #include "IMouseCursorHandler.h"
 #include "RenderConfig.h"
 
+namespace IRenderer {
 class IRendererFacade
 {
 public:
@@ -14,3 +15,4 @@ public:
 
   virtual void execute() = 0;
 };
+}
