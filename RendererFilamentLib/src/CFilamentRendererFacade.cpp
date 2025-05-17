@@ -16,12 +16,21 @@ CFilamentRendererFacade::init(const IRenderer::RenderConfig& settings)
   auto& cameraOperator = m_pFilamentRenderer->cameraOperator();
   m_pMouseCursorHandler =
     std::make_unique<CMouseCursorHandler>(this, cameraOperator);
+
+  m_pObjectLoader = std::make_unique<CObjectLoader>(
+    m_pFilamentRenderer->engine(), m_pFilamentRenderer->scene());
 }
 
-IRenderer::IMouseCursorHandler*
+IRenderer::IMouseCursorHandler&
 CFilamentRendererFacade::mouseCursorHandler()
 {
-  return m_pMouseCursorHandler.get();
+  return *m_pMouseCursorHandler.get();
+}
+
+IRenderer::IObjectLoader&
+RendererFilament::CFilamentRendererFacade::objectLoader()
+{
+  return *m_pObjectLoader.get();
 }
 
 void

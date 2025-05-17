@@ -2,6 +2,7 @@
 
 #include "CFilamentRenderer.h"
 #include "CMouseCursorHandler.h"
+#include "CObjectLoader.h"
 
 #include <IRenderer/IRendererFacade.h>
 
@@ -16,12 +17,15 @@ public:
 
   void init(const IRenderer::RenderConfig&) override;
 
-  IRenderer::IMouseCursorHandler* mouseCursorHandler() override;
+  IRenderer::IMouseCursorHandler& mouseCursorHandler() override;
+
+  IRenderer::IObjectLoader& objectLoader() override;
 
   void execute() override;
 
 private:
   std::unique_ptr<CFilamentRenderer> m_pFilamentRenderer;
   std::unique_ptr<CMouseCursorHandler> m_pMouseCursorHandler;
+  std::unique_ptr<CObjectLoader> m_pObjectLoader;
 };
 }

@@ -33,7 +33,11 @@ set(SOURCES ${ROOT_SRC}/CFilamentRendererFacade.cpp
             ${ROOT_SRC}/COperator.cpp          
             ${ROOT_SRC}/CFilamentComponentCleaner.cpp        
             ${ROOT_SRC}/CCamera.cpp        
-            ${ROOT_SRC}/CEntity.cpp        
+            ${ROOT_SRC}/CEntity.cpp       
+            ${ROOT_SRC}/Conversation.cpp
+            ${ROOT_SRC}/CObjectLoader.cpp
+            ${ROOT_SRC}/CVertexBufferManager.cpp
+            ${ROOT_SRC}/CIndexBufferManager.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
