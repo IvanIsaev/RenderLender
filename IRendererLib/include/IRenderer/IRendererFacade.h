@@ -1,7 +1,11 @@
 #pragma once
 
-#include "IMouseCursorHandler.h"
-#include "RenderConfig.h"
+namespace IRenderer {
+class IMouseCursorHandler;
+class IObjectLoader;
+
+struct RenderConfig;
+}
 
 namespace IRenderer {
 class IRendererFacade
@@ -11,7 +15,9 @@ public:
 
   virtual void init(const RenderConfig&) = 0;
 
-  virtual IMouseCursorHandler* mouseCursorHandler() = 0;
+  virtual IMouseCursorHandler& mouseCursorHandler() = 0;
+
+  virtual IObjectLoader& objectLoader() = 0;
 
   virtual void execute() = 0;
 };

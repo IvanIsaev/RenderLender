@@ -1,13 +1,17 @@
 #pragma once
 
 #include "CFilamentComponentCleaner.h"
+#include "CIndexBufferManager.h"
 #include "CMouseCursorHandler.h"
+#include "CVertexBufferManager.h"
 #include "FilamentEngineFwd.h"
 #include "FilamentTypesFwd.h"
 
+#include <IRenderer/Object.h>
 #include <IRenderer/RenderConfig.h>
 
 namespace RendererFilament {
+
 class CFilamentRenderer
 {
 public:
@@ -20,6 +24,10 @@ public:
 
   COperator& cameraOperator();
 
+  EngineShared engine() const;
+
+  filament::Scene& scene();
+
 private:
   EngineShared createEngine() const;
   RendererUnique createRenderer(EngineShared);
@@ -28,12 +36,6 @@ private:
   CCameraUnique createCamera(EngineShared);
   SceneUnique createScene(EngineShared);
   SkyboxUnique createSkybox(EngineShared);
-  VertexBufferUnique createVertexBuffer(EngineShared);
-  IndexBufferUnique createIndexBuffer(EngineShared);
-  EntityUnique createRenderable(EngineShared,
-                                const filament::VertexBuffer*,
-                                const filament::IndexBuffer*);
-  MaterialUnique createMaterial(EngineShared);
   CameraManipulatorUnique createCameraManipulator(const MathTypes::UIntSize2D&);
 
 private:
@@ -43,10 +45,6 @@ private:
   ViewUnique m_pMainView;
   SceneUnique m_pScene;
   SkyboxUnique m_pSkybox;
-  VertexBufferUnique m_pVertexBuffer;
-  IndexBufferUnique m_pIndexBuffer;
-  EntityUnique m_pRenderable;
-  MaterialUnique m_pMaterial;
   OperatorUnique m_pOperator;
 };
 }

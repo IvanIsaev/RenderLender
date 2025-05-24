@@ -1,27 +1,17 @@
 #include "CFilamentRenderer.h"
 #include "CCamera.h"
-#include "CEntity.h"
 #include "COperator.h"
-#include "DeleteMe.h"
 
-#include <backend/BufferDescriptor.h>
 #include <backend/DriverEnums.h>
 #include <camutils/Manipulator.h>
 #include <filament/Engine.h>
-#include <filament/IndexBuffer.h>
-#include <filament/Material.h>
-#include <filament/MaterialInstance.h>
-#include <filament/RenderableManager.h>
 #include <filament/Renderer.h>
 #include <filament/Scene.h>
 #include <filament/Skybox.h>
 #include <filament/SwapChain.h>
-#include <filament/TransformManager.h>
-#include <filament/VertexBuffer.h>
 #include <filament/View.h>
 #include <filament/ViewPort.h>
 
-#include <utils/Entity.h>
 #include <utils/EntityManager.h>
 
 #include <cmath>
@@ -30,24 +20,6 @@
 using namespace filament;
 using namespace RendererFilament;
 
-namespace {
-struct Vertex
-{
-  math::float2 position;
-  uint32_t color;
-};
-
-static const Vertex TRIANGLE_VERTICES[3] = {
-  { { 1, 0 }, 0xffff0000u },
-  { { std::cos(std::numbers::pi * 2 / 3), std::sin(std::numbers::pi * 2 / 3) },
-    0xff00ff00u },
-  { { std::cos(std::numbers::pi * 4 / 3), std::sin(std::numbers::pi * 4 / 3) },
-    0xff0000ffu },
-};
-
-static constexpr uint16_t TRIANGLE_INDICES[3] = { 0, 1, 2 };
-}
-
 CFilamentRenderer::CFilamentRenderer()
   : m_pEngine(nullptr)
   , m_pRenderer(nullptr, FilamentComponentCleaner(nullptr))
@@ -55,10 +27,6 @@ CFilamentRenderer::CFilamentRenderer()
   , m_pMainView(nullptr, FilamentComponentCleaner(nullptr))
   , m_pScene(nullptr, FilamentComponentCleaner(nullptr))
   , m_pSkybox(nullptr, FilamentComponentCleaner(nullptr))
-  , m_pVertexBuffer(nullptr, FilamentComponentCleaner(nullptr))
-  , m_pIndexBuffer(nullptr, FilamentComponentCleaner(nullptr))
-  , m_pRenderable(nullptr, FilamentComponentCleaner(nullptr))
-  , m_pMaterial(nullptr, FilamentComponentCleaner(nullptr))
   , m_pOperator(nullptr)
 {
 }
@@ -96,30 +64,6 @@ CFilamentRenderer::init(const IRenderer::RenderConfig& settings)
   m_pScene->setSkybox(m_pSkybox.get());
 
   m_pMainView->setPostProcessingEnabled(false);
-
-  m_pVertexBuffer = createVertexBuffer(m_pEngine);
-  m_pVertexBuffer->setBufferAt(
-    *m_pEngine,
-    0,
-    VertexBuffer::BufferDescriptor(TRIANGLE_VERTICES, 36, nullptr));
-
-  m_pIndexBuffer = createIndexBuffer(m_pEngine);
-  m_pIndexBuffer->setBuffer(
-    *m_pEngine, IndexBuffer::BufferDescriptor(TRIANGLE_INDICES, 6, nullptr));
-
-  m_pMaterial = createMaterial(m_pEngine);
-
-  m_pRenderable =
-    createRenderable(m_pEngine, m_pVertexBuffer.get(), m_pIndexBuffer.get());
-
-  auto& transformManager = m_pEngine->getTransformManager();
-  auto ti = transformManager.getInstance(m_pRenderable->entityId());
-  filament::math::mat4f transform = filament::math::mat4f{
-    filament::math::mat3f(1), filament::math::float3(0, 0, -10)
-  } * transformManager.getWorldTransform(ti);
-
-  m_pScene->addEntity(m_pRenderable->entityId());
-  transformManager.setTransform(ti, transform);
 }
 
 EngineShared
@@ -183,78 +127,15 @@ CFilamentRenderer::createSkybox(EngineShared pEngine)
     FilamentComponentCleaner(pEngine));
 }
 
-VertexBufferUnique
-CFilamentRenderer::createVertexBuffer(EngineShared pEngine)
-{
-  const auto pVertexBuffer =
-    VertexBuffer::Builder()
-      .vertexCount(3)
-      .bufferCount(1)
-      .attribute(VertexAttribute::POSITION,
-                 0,
-                 VertexBuffer::AttributeType::FLOAT2,
-                 0,
-                 12)
-      .attribute(
-        VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 8, 12)
-      .normalized(VertexAttribute::COLOR)
-      .build(*pEngine);
-
-  return VertexBufferUnique(pVertexBuffer, FilamentComponentCleaner(pEngine));
-}
-
-IndexBufferUnique
-CFilamentRenderer::createIndexBuffer(EngineShared pEngine)
-{
-  const auto pIndexBuffer = IndexBuffer::Builder()
-                              .indexCount(3)
-                              .bufferType(IndexBuffer::IndexType::USHORT)
-                              .build(*pEngine);
-  return IndexBufferUnique(pIndexBuffer, FilamentComponentCleaner(pEngine));
-}
-
-EntityUnique
-CFilamentRenderer::createRenderable(EngineShared pEngine,
-                                    const filament::VertexBuffer*,
-                                    const filament::IndexBuffer*)
-{
-  const auto renderable = utils::EntityManager::get().create();
-  RenderableManager::Builder(1)
-    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-    .material(0, m_pMaterial->getDefaultInstance())
-    .geometry(0,
-              RenderableManager::PrimitiveType::TRIANGLES,
-              m_pVertexBuffer.get(),
-              m_pIndexBuffer.get(),
-              0,
-              3)
-    .culling(false)
-    .receiveShadows(false)
-    .castShadows(false)
-    .build(*pEngine, renderable);
-
-  return EntityUnique(new CEntity(renderable),
-                      FilamentComponentCleaner(pEngine));
-}
-
-MaterialUnique
-CFilamentRenderer::createMaterial(EngineShared pEngine)
-{
-  return MaterialUnique(
-    Material::Builder()
-      .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-      .build(*pEngine),
-    FilamentComponentCleaner(pEngine));
-}
-
 CameraManipulatorUnique
 CFilamentRenderer::createCameraManipulator(
   const MathTypes::UIntSize2D& windowSize)
 {
   return CameraManipulatorUnique(CameraManipulator::Builder()
                                    .viewport(windowSize.x(), windowSize.y())
-                                   .targetPosition(0, 0, -10)
+                                   .targetPosition(0, 0, 0)
                                    .flightMoveDamping(15.0)
+                                   .orbitHomePosition(0, 0, 20)
                                    .build(filament::camutils::Mode::ORBIT));
 }
 
@@ -271,4 +152,16 @@ COperator&
 CFilamentRenderer::cameraOperator()
 {
   return *m_pOperator.get();
+}
+
+EngineShared
+RendererFilament::CFilamentRenderer::engine() const
+{
+  return m_pEngine;
+}
+
+filament::Scene&
+RendererFilament::CFilamentRenderer::scene()
+{
+  return *m_pScene.get();
 }

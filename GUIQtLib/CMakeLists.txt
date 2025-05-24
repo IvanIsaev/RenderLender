@@ -51,7 +51,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt::Core Qt::Gui Qt::Widgets)
 target_link_libraries(${PROJECT_NAME} PUBLIC IGUIlib)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
+target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0)
 
 #Hack to place this dll to the same folder as exe
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
