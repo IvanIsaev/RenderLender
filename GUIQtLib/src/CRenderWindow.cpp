@@ -20,6 +20,21 @@ qPointToSize2D(const QPoint& point)
   return MathTypes::UIntPoint2D{ static_cast<uint32_t>(point.x()),
                       static_cast<uint32_t>(point.y()) };
 }
+
+Miscellaneous::MouseButtonType
+typeOfPressedButton(Qt::MouseButton qtMouseButton)
+{
+  switch (qtMouseButton) {
+    case (Qt::LeftButton):
+      return Miscellaneous::MouseButtonType::kLeftButton;
+    case (Qt::RightButton):
+      return Miscellaneous::MouseButtonType::kRightButton;
+    case (Qt::MiddleButton):
+      return Miscellaneous::MouseButtonType::kMiddleButton;
+    default:
+      return Miscellaneous::MouseButtonType::kUndefined;
+  }
+}
 }
 
 CRenderWindow::CRenderWindow(QWidget* parent)
@@ -62,8 +77,10 @@ CRenderWindow::trackMouseMove(const SlotForMouseSignal& slot) const
 void
 CRenderWindow::mousePressEvent(QMouseEvent* event)
 {
+  const auto buttonType = typeOfPressedButton(event->button());
+
   m_mousePressedSignal(
-    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()), buttonType);
 
   QWidget::mousePressEvent(event);
 }
@@ -71,8 +88,10 @@ CRenderWindow::mousePressEvent(QMouseEvent* event)
 void
 CRenderWindow::mouseReleaseEvent(QMouseEvent* event)
 {
+  const auto buttonType = typeOfPressedButton(event->button());
+
   m_mouseReleasedSignal(
-    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()), buttonType);
 
   QWidget::mouseReleaseEvent(event);
 }
@@ -80,8 +99,10 @@ CRenderWindow::mouseReleaseEvent(QMouseEvent* event)
 void
 CRenderWindow::mouseMoveEvent(QMouseEvent* event)
 {
-  m_mouseMovedSignal(
-    qPointToSize2D(event->pos() * QWidget::devicePixelRatio()));
+  const auto buttonType = typeOfPressedButton(event->button());
+
+  m_mouseMovedSignal(qPointToSize2D(event->pos() * QWidget::devicePixelRatio()),
+                     buttonType);
 
   QWidget::mouseMoveEvent(event);
 }

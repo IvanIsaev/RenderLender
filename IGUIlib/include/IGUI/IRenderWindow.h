@@ -3,13 +3,15 @@
 #include <MathTypes/Point.h>
 #include <MathTypes/Size.h>
 
+#include <Miscellaneous/MouseButtons.h>
+
 #include <boost/signals2/signal.hpp>
 
 namespace IGUI {
 class IRenderWindow
 {
 public:
-  using MouseSignal = boost::signals2::signal<void(const MathTypes::UIntPoint2D&)>;
+  using MouseSignal = boost::signals2::signal<void(const MathTypes::UIntPoint2D&, Miscellaneous::MouseButtonType)>;
   using SlotForMouseSignal = MouseSignal::slot_type;
 
 public:

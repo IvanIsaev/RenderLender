@@ -18,28 +18,35 @@ CMouseCursorHandler::CMouseCursorHandler(IRenderer::IRendererFacade* pRenderer,
 }
 
 void
-CMouseCursorHandler::handleMousePress(const MathTypes::UIntPoint2D& position)
+CMouseCursorHandler::handleMousePress(const MathTypes::UIntPoint2D& position,
+                                      Miscellaneous::MouseButtonType buttonType)
 {
-  if (m_pRenderer) {
-    m_cameraOperator.grabBegin(position.x(), position.y(), false);
-    m_pRenderer->execute();
-  }
+  if (!m_pRenderer)
+    return;
+
+  const auto useStrafe = buttonType == Miscellaneous::MouseButtonType::kRightButton;
+  m_cameraOperator.grabBegin(position.x(), position.y(), useStrafe);
+  m_pRenderer->execute();
 }
 
 void
-CMouseCursorHandler::handleMouseRelease(const MathTypes::UIntPoint2D& position)
+CMouseCursorHandler::handleMouseRelease(const MathTypes::UIntPoint2D& position,
+                                        Miscellaneous::MouseButtonType)
 {
-  if (m_pRenderer) {
-    m_cameraOperator.grabEnd();
-    m_pRenderer->execute();
-  }
+  if (!m_pRenderer)
+    return;
+
+  m_cameraOperator.grabEnd();
+  m_pRenderer->execute();
 }
 
 void
-CMouseCursorHandler::handleMouseMove(const MathTypes::UIntPoint2D& position)
+CMouseCursorHandler::handleMouseMove(const MathTypes::UIntPoint2D& position,
+                                     Miscellaneous::MouseButtonType)
 {
-  if (m_pRenderer) {
-    m_cameraOperator.grabUpdate(position.x(), position.y());
-    m_pRenderer->execute();
-  }
+  if (!m_pRenderer)
+    return;
+
+  m_cameraOperator.grabUpdate(position.x(), position.y());
+  m_pRenderer->execute();
 }
