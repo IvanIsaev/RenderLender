@@ -19,9 +19,12 @@ public:
   explicit CMouseCursorHandler(IRenderer::IRendererFacade*, COperator&);
   virtual ~CMouseCursorHandler() = default;
 
-  void handleMousePress(const MathTypes::UIntPoint2D&) override;
-  void handleMouseRelease(const MathTypes::UIntPoint2D&) override;
-  void handleMouseMove(const MathTypes::UIntPoint2D&) override;
+  void handleMousePress(const MathTypes::UIntPoint2D&,
+                        Miscellaneous::MouseButtonType) override;
+  void handleMouseRelease(const MathTypes::UIntPoint2D&,
+                          Miscellaneous::MouseButtonType) override;
+  void handleMouseMove(const MathTypes::UIntPoint2D&,
+                       Miscellaneous::MouseButtonType) override;
 
 private:
   IRenderer::IRendererFacade* m_pRenderer;

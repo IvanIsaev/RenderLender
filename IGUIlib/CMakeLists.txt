@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include/)
 
 target_include_directories(${PROJECT_NAME} INTERFACE $<TARGET_PROPERTY:MathTypes,INTERFACE_INCLUDE_DIRECTORIES>)
+target_include_directories(${PROJECT_NAME} INTERFACE $<TARGET_PROPERTY:MiscellaneousH,INTERFACE_INCLUDE_DIRECTORIES>)
 
 cmake_policy(SET CMP0167 OLD)
 find_package(Boost REQUIRED)

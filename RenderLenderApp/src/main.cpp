@@ -105,19 +105,22 @@ main(int argc, char* argv[])
   auto pRenderer = RendererFilament::CFilamentRendererFactory::create();
   pRenderer->init(config);
 
-  auto& mouseCursorHandler = pRenderer->mouseCursorHandler();
+  auto& mouseCursorHandler = pRenderer->mouseCursorHandler();  
   pLastWindow->trackMousePress(
     std::bind(&IRenderer::IMouseCursorHandler::handleMousePress,
               &mouseCursorHandler,
-              std::placeholders::_1));
+              std::placeholders::_1,
+              std::placeholders::_2));
   pLastWindow->trackMouseRelease(
     std::bind(&IRenderer::IMouseCursorHandler::handleMouseRelease,
               &mouseCursorHandler,
-              std::placeholders::_1));
+              std::placeholders::_1,
+              std::placeholders::_2));
   pLastWindow->trackMouseMove(
     std::bind(&IRenderer::IMouseCursorHandler::handleMouseMove,
               &mouseCursorHandler,
-              std::placeholders::_1));
+              std::placeholders::_1,
+              std::placeholders::_2));
 
   loadScene(*pScene.get(), *pRenderer.get());
 
