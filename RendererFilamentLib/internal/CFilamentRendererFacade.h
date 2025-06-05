@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CFilamentRenderer.h"
+#include "CLightManager.h"
 #include "CMouseCursorHandler.h"
 #include "CObjectLoader.h"
 
@@ -27,5 +28,6 @@ private:
   std::unique_ptr<CFilamentRenderer> m_pFilamentRenderer;
   std::unique_ptr<CMouseCursorHandler> m_pMouseCursorHandler;
   std::unique_ptr<CObjectLoader> m_pObjectLoader;
+  std::unique_ptr<CLightManager> m_pLightManager;
 };
 }

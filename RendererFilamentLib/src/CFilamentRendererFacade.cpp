@@ -19,6 +19,9 @@ CFilamentRendererFacade::init(const IRenderer::RenderConfig& settings)
 
   m_pObjectLoader = std::make_unique<CObjectLoader>(
     m_pFilamentRenderer->engine(), m_pFilamentRenderer->scene());
+
+  m_pLightManager = std::make_unique<CLightManager>(
+    m_pFilamentRenderer->engine(), m_pFilamentRenderer->scene());
 }
 
 IRenderer::IMouseCursorHandler&
