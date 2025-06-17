@@ -1,11 +1,9 @@
 #include "CObjectLoader.h"
 
+#include "CMaterialManager.h"
 #include "Conversation.h"
-#include "DeleteMe.h"
 
 #include <filament/IndexBuffer.h>
-#include <filament/Material.h>
-#include <filament/MaterialInstance.h>
 #include <filament/RenderableManager.h>
 #include <filament/Scene.h>
 #include <filament/TransformManager.h>
@@ -13,6 +11,8 @@
 
 #include <utils/Entity.h>
 #include <utils/EntityManager.h>
+
+#include <math/vec3.h>
 
 using namespace RendererFilament;
 
@@ -24,13 +24,15 @@ enum BufferIndexes
 };
 }
 
-RendererFilament::CObjectLoader::CObjectLoader(EngineShared pEngine,
-                                               filament::Scene& scene)
+RendererFilament::CObjectLoader::CObjectLoader(
+  EngineShared pEngine,
+  filament::Scene& scene,
+  CMaterialManager& materialManager)
   : m_pVertexBufferManager(std::make_shared<CVertexBufferManager>())
   , m_pIndexBufferManager(std::make_shared<CIndexBufferManager>())
   , m_pEngine(pEngine)
   , m_scene(scene)
-  , m_pDefaultMaterial(createMaterial(m_pEngine))
+  , m_materialManager(materialManager)
 {
 }
 
@@ -78,7 +80,8 @@ CObjectLoader::loadObject(const IRenderer::Object& object)
   auto pRenderable = createRenderable(m_pEngine,
                                       pVertexBuffer.get(),
                                       pIndexBuffer.get(),
-                                      pObject->meshes[0].faces);
+                                      pObject->meshes[0].faces,
+                                      pObject->meshes[0].materialIndex);
 
   auto& transformManager = m_pEngine->getTransformManager();
 
@@ -154,14 +157,17 @@ EntityUnique
 CObjectLoader::createRenderable(EngineShared pEngine,
                                 filament::VertexBuffer* pVertexBuffer,
                                 filament::IndexBuffer* pIndexBuffer,
-                                const IRenderer::Faces& faces)
+                                const IRenderer::Faces& faces,
+                                uint32_t materialIndex)
 {
   using namespace filament;
 
+  const auto pMaterialInstance =
+    m_materialManager.getMaterialInstance(materialIndex);
   const auto renderable = utils::EntityManager::get().create();
   const auto result = RenderableManager::Builder(1)
                         .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                        .material(0, m_pDefaultMaterial->getDefaultInstance())
+                        .material(0, pMaterialInstance)
                         .geometry(0,
                                   RenderableManager::PrimitiveType::TRIANGLES,
                                   pVertexBuffer,
@@ -169,24 +175,12 @@ CObjectLoader::createRenderable(EngineShared pEngine,
                                   0,
                                   faces.size() * 3)
                         .culling(false)
-                        .receiveShadows(false)
-                        .castShadows(false)
+                        .receiveShadows(true)
+                        .castShadows(true)
                         .build(*pEngine, renderable);
 
   return EntityUnique(new CEntity(renderable),
                       FilamentComponentCleaner(pEngine));
-}
-
-MaterialUnique
-CObjectLoader::createMaterial(EngineShared pEngine)
-{
-  using namespace filament;
-
-  return MaterialUnique(
-    Material::Builder()
-      .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-      .build(*pEngine),
-    FilamentComponentCleaner(pEngine));
 }
 
 std::optional<uint32_t>

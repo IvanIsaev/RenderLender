@@ -17,8 +17,13 @@ CFilamentRendererFacade::init(const IRenderer::RenderConfig& settings)
   m_pMouseCursorHandler =
     std::make_unique<CMouseCursorHandler>(this, cameraOperator);
 
-  m_pObjectLoader = std::make_unique<CObjectLoader>(
-    m_pFilamentRenderer->engine(), m_pFilamentRenderer->scene());
+  m_pMaterialManager =
+    std::make_unique<CMaterialManager>(m_pFilamentRenderer->engine());
+  m_pMaterialManager->init();
+
+  m_pObjectLoader = std::make_unique<CObjectLoader>(m_pFilamentRenderer->engine(),
+                                    m_pFilamentRenderer->scene(),
+                                    *m_pMaterialManager);
 
   m_pLightManager = std::make_unique<CLightManager>(
     m_pFilamentRenderer->engine(), m_pFilamentRenderer->scene());
@@ -27,13 +32,19 @@ CFilamentRendererFacade::init(const IRenderer::RenderConfig& settings)
 IRenderer::IMouseCursorHandler&
 CFilamentRendererFacade::mouseCursorHandler()
 {
-  return *m_pMouseCursorHandler.get();
+  return *m_pMouseCursorHandler;
 }
 
 IRenderer::IObjectLoader&
-RendererFilament::CFilamentRendererFacade::objectLoader()
+CFilamentRendererFacade::objectLoader()
 {
-  return *m_pObjectLoader.get();
+  return *m_pObjectLoader;
+}
+
+IRenderer::IMaterialManager&
+CFilamentRendererFacade::materialManager()
+{
+  return *m_pMaterialManager;
 }
 
 void

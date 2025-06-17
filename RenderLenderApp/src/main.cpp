@@ -9,6 +9,7 @@
 #include <IGUI/IRenderArea.h>
 #include <IGUI/IRenderWindow.h>
 
+#include <IRenderer/IMaterialManager.h>
 #include <IRenderer/IMouseCursorHandler.h>
 #include <IRenderer/IObjectLoader.h>
 #include <IRenderer/Object.h>
@@ -25,6 +26,7 @@ void
 loadNode(const Scene::Node& node,
          const std::vector<Scene::Mesh>& meshes,
          IRenderer::IObjectLoader& objectLoader,
+         IRenderer::IMaterialManager& materialManager,
          std::optional<uint32_t> parentId = std::nullopt)
 {
   auto idOfParent = std::optional<uint32_t>{};
@@ -49,8 +51,10 @@ loadNode(const Scene::Node& node,
 
       for (const auto& vertex : mesh.vertices) {
         filamentMesh.vertices.coords.emplace_back(vertex);
-        filamentMesh.vertices.colors.emplace_back(0xccccccff);
+        filamentMesh.vertices.colors.emplace_back(0x000000ff);
       }
+
+      filamentMesh.materialIndex = materialManager.defaultMaterialInstanceId();
     }
 
     object.transformation = RLMath::transposedCopy(node.transformation);
@@ -61,7 +65,7 @@ loadNode(const Scene::Node& node,
   }
 
   for (const auto pChild : node.children) {
-    loadNode(*pChild, meshes, objectLoader, idOfParent);
+    loadNode(*pChild, meshes, objectLoader, materialManager, idOfParent);
   }
 }
 
@@ -69,7 +73,7 @@ void
 loadScene(const Scene::Scene& scene, IRenderer::IRendererFacade& rendererFacade)
 {
   const auto pRoot = scene.root;
-  loadNode(*pRoot, scene.meshes, rendererFacade.objectLoader());
+  loadNode(*pRoot, scene.meshes, rendererFacade.objectLoader(), rendererFacade.materialManager());
 }
 }
 

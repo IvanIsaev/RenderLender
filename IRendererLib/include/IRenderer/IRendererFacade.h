@@ -3,6 +3,7 @@
 namespace IRenderer {
 class IMouseCursorHandler;
 class IObjectLoader;
+class IMaterialManager;
 
 struct RenderConfig;
 }
@@ -18,6 +19,8 @@ public:
   virtual IMouseCursorHandler& mouseCursorHandler() = 0;
 
   virtual IObjectLoader& objectLoader() = 0;
+
+  virtual IMaterialManager& materialManager() = 0;
 
   virtual void execute() = 0;
 };

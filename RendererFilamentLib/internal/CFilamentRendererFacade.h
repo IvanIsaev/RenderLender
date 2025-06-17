@@ -2,6 +2,7 @@
 
 #include "CFilamentRenderer.h"
 #include "CLightManager.h"
+#include "CMaterialManager.h"
 #include "CMouseCursorHandler.h"
 #include "CObjectLoader.h"
 
@@ -22,6 +23,8 @@ public:
 
   IRenderer::IObjectLoader& objectLoader() override;
 
+  IRenderer::IMaterialManager& materialManager() override;
+
   void execute() override;
 
 private:
@@ -29,5 +32,6 @@ private:
   std::unique_ptr<CMouseCursorHandler> m_pMouseCursorHandler;
   std::unique_ptr<CObjectLoader> m_pObjectLoader;
   std::unique_ptr<CLightManager> m_pLightManager;
+  std::unique_ptr<CMaterialManager> m_pMaterialManager;
 };
 }

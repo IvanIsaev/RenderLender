@@ -30,6 +30,7 @@ struct Mesh
 {
   Faces faces;
   Vertices vertices;
+  uint32_t materialIndex;
 };
 
 static constexpr auto sizeOfCoord = sizeof(Coord);
