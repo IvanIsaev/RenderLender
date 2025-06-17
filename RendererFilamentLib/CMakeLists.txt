@@ -38,6 +38,8 @@ set(SOURCES ${ROOT_SRC}/CFilamentRendererFacade.cpp
             ${ROOT_SRC}/CObjectLoader.cpp
             ${ROOT_SRC}/CVertexBufferManager.cpp
             ${ROOT_SRC}/CIndexBufferManager.cpp
+            ${ROOT_SRC}/CLightManager.cpp
+            ${ROOT_SRC}/CMaterialManager.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})

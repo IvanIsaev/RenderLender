@@ -15,10 +15,14 @@ class VertexBuffer;
 }
 
 namespace RendererFilament {
+class CMaterialManager;
+}
+
+namespace RendererFilament {
 class CObjectLoader : public IRenderer::IObjectLoader
 {
 public:
-  explicit CObjectLoader(EngineShared, filament::Scene&);
+  explicit CObjectLoader(EngineShared, filament::Scene&, CMaterialManager&);
 
   void loadObject(const IRenderer::Object&) override;
   std::optional<uint32_t> idLastLoadedObject() const override;
@@ -32,19 +36,17 @@ private:
   EntityUnique createRenderable(EngineShared,
                                 filament::VertexBuffer*,
                                 filament::IndexBuffer*,
-                                const IRenderer::Faces&);
-
-  MaterialUnique createMaterial(EngineShared);
-
+                                const IRenderer::Faces&,
+                                uint32_t);
 
 private:
   VertexBufferManagerShared m_pVertexBufferManager;
   IndexBufferManagerShared m_pIndexBufferManager;
   EngineShared m_pEngine;
   filament::Scene& m_scene;
-  MaterialUnique m_pDefaultMaterial;
   std::optional<uint32_t> m_idLastAddedObject;
   std::vector<std::unique_ptr<IRenderer::Object>> m_objectsForDelete;
   std::vector<EntityUnique> m_renderables;
+  CMaterialManager& m_materialManager;
 };
 }

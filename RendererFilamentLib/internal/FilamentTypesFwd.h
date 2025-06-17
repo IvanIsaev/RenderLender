@@ -58,5 +58,8 @@ using EntityUnique = std::unique_ptr<CEntity, FilamentComponentCleaner>;
 using MaterialUnique =
   std::unique_ptr<filament::Material, FilamentComponentCleaner>;
 
+using MaterialInstanceUnique =
+  std::unique_ptr<filament::MaterialInstance, FilamentComponentCleaner>;
+
 using OperatorUnique = std::unique_ptr<COperator>;
 }
