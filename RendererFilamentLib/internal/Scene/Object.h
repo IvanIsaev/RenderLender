@@ -8,7 +8,7 @@
 #include <optional>
 #include <vector>
 
-namespace IRenderer {
+namespace RendererFilament {
 struct Object
 {
   std::vector<Mesh> meshes;

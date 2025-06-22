@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace IRenderer {
+namespace RendererFilament {
 struct Face;
 
 using Faces = std::vector<Face>;

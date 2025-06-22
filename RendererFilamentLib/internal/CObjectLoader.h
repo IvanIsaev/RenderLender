@@ -6,6 +6,8 @@
 #include "FilamentEngineFwd.h"
 #include "FilamentTypesFwd.h"
 
+#include "Scene/Object.h"
+
 #include "IRenderer/IObjectLoader.h"
 
 namespace filament {
@@ -24,28 +26,29 @@ class CObjectLoader : public IRenderer::IObjectLoader
 public:
   explicit CObjectLoader(EngineShared, filament::Scene&, CMaterialManager&);
 
-  void loadObject(const IRenderer::Object&) override;
-  std::optional<uint32_t> idLastLoadedObject() const override;
+  void load(const Scene::Scene& scene) override;
 
 private:
   VertexBufferUnique createVertexBuffer(EngineShared,
-                                        const IRenderer::Vertices&);
+                                        const Vertices&);
 
-  IndexBufferUnique createIndexBuffer(EngineShared, const IRenderer::Faces&);
+  IndexBufferUnique createIndexBuffer(EngineShared,
+                                      const Faces&);
 
   EntityUnique createRenderable(EngineShared,
                                 filament::VertexBuffer*,
                                 filament::IndexBuffer*,
-                                const IRenderer::Faces&,
+                                const Faces&,
                                 uint32_t);
+
+  uint32_t load(const Object&);
 
 private:
   VertexBufferManagerShared m_pVertexBufferManager;
   IndexBufferManagerShared m_pIndexBufferManager;
   EngineShared m_pEngine;
   filament::Scene& m_scene;
-  std::optional<uint32_t> m_idLastAddedObject;
-  std::vector<std::unique_ptr<IRenderer::Object>> m_objectsForDelete;
+  std::vector<std::unique_ptr<Object>> m_objectsForDelete;
   std::vector<EntityUnique> m_renderables;
   CMaterialManager& m_materialManager;
 };

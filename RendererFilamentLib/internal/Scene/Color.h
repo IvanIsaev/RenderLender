@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace IRenderer {
+namespace RendererFilament {
 struct Color
 {
   Color(uint32_t color)

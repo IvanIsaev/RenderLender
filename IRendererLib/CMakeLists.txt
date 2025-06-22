@@ -8,4 +8,6 @@ target_include_directories(${PROJECT_NAME} INTERFACE include/)
 target_include_directories(${PROJECT_NAME} INTERFACE $<TARGET_PROPERTY:MathTypes,INTERFACE_INCLUDE_DIRECTORIES>)
 target_include_directories(${PROJECT_NAME} INTERFACE $<TARGET_PROPERTY:MiscellaneousH,INTERFACE_INCLUDE_DIRECTORIES>)
 
+target_link_libraries(${PROJECT_NAME} INTERFACE Scene)
+
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_23)
