@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Object.h"
-
-#include <cstdint>
-#include <optional>
+namespace Scene
+{
+struct Scene;
+}
 
 namespace IRenderer {
 class IObjectLoader
@@ -11,7 +11,6 @@ class IObjectLoader
 public:
   virtual ~IObjectLoader() = default;
 
-  virtual void loadObject(const Object&) = 0;
-  virtual std::optional<uint32_t> idLastLoadedObject() const = 0;
+  virtual void load(const Scene::Scene& scene) = 0;
 };
 }

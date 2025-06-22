@@ -1,6 +1,7 @@
 #include "CObjectLoader.h"
 
 #include "CMaterialManager.h"
+#include "CSceneLoader.h"
 #include "Conversation.h"
 
 #include <filament/IndexBuffer.h>
@@ -37,18 +38,95 @@ RendererFilament::CObjectLoader::CObjectLoader(
 }
 
 void
-CObjectLoader::loadObject(const IRenderer::Object& object)
+CObjectLoader::load(const Scene::Scene& scene)
+{
+  auto loadToFilament = [this](const auto& object) { return load(object); };
+
+  auto loadScene = CSceneLoader{ m_materialManager };
+  loadScene(scene, loadToFilament);
+}
+
+VertexBufferUnique
+CObjectLoader::createVertexBuffer(EngineShared pEngine,
+                                  const Vertices& vertices)
+{
+  using namespace filament;
+
+  const auto pVertexBuffer =
+    VertexBuffer::Builder()
+      .vertexCount(static_cast<uint32_t>(vertices.coords.size()))
+      .bufferCount(2)
+      .attribute(VertexAttribute::POSITION,
+                 kGeometryBufferIndex,
+                 VertexBuffer::AttributeType::FLOAT3,
+                 0,
+                 sizeOfCoord)
+      .attribute(VertexAttribute::COLOR,
+                 kColorBufferIndex,
+                 VertexBuffer::AttributeType::UBYTE4,
+                 0,
+                 sizeOfColor)
+      .normalized(VertexAttribute::COLOR)
+      .build(*pEngine);
+
+  return VertexBufferUnique(pVertexBuffer, FilamentComponentCleaner(pEngine));
+}
+
+IndexBufferUnique
+CObjectLoader::createIndexBuffer(EngineShared pEngine, const Faces& faces)
+{
+  using namespace filament;
+
+  const auto pIndexBuffer =
+    IndexBuffer::Builder()
+      .indexCount(static_cast<uint32_t>(faces.size()) * 3)
+      .bufferType(IndexBuffer::IndexType::UINT)
+      .build(*pEngine);
+  return IndexBufferUnique(pIndexBuffer, FilamentComponentCleaner(pEngine));
+}
+
+EntityUnique
+CObjectLoader::createRenderable(EngineShared pEngine,
+                                filament::VertexBuffer* pVertexBuffer,
+                                filament::IndexBuffer* pIndexBuffer,
+                                const Faces& faces,
+                                uint32_t materialIndex)
+{
+  using namespace filament;
+
+  const auto pMaterialInstance =
+    m_materialManager.getMaterialInstance(materialIndex);
+  const auto renderable = utils::EntityManager::get().create();
+  const auto result = RenderableManager::Builder(1)
+                        .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                        .material(0, pMaterialInstance)
+                        .geometry(0,
+                                  RenderableManager::PrimitiveType::TRIANGLES,
+                                  pVertexBuffer,
+                                  pIndexBuffer,
+                                  0,
+                                  faces.size() * 3)
+                        .culling(false)
+                        .receiveShadows(true)
+                        .castShadows(true)
+                        .build(*pEngine, renderable);
+
+  return EntityUnique(new CEntity(renderable),
+                      FilamentComponentCleaner(pEngine));
+}
+
+uint32_t
+CObjectLoader::load(const Object& object)
 {
   using namespace filament;
 
   const auto pObject =
-    m_objectsForDelete.emplace_back(std::make_unique<IRenderer::Object>(object))
-      .get();
+    m_objectsForDelete.emplace_back(std::make_unique<Object>(object)).get();
 
   const auto coordSize =
-    IRenderer::sizeOfCoord * pObject->meshes[0].vertices.coords.size();
+    sizeOfCoord * pObject->meshes[0].vertices.coords.size();
   const auto colorSize =
-    IRenderer::sizeOfColor * pObject->meshes[0].vertices.colors.size();
+    sizeOfColor * pObject->meshes[0].vertices.colors.size();
 
   auto pVertexBuffer =
     createVertexBuffer(m_pEngine, pObject->meshes[0].vertices);
@@ -67,8 +145,7 @@ CObjectLoader::loadObject(const IRenderer::Object& object)
       colorSize,
       nullptr)); // TODO: realize callback to release memory
 
-  const auto indecesSize =
-    IRenderer::sizeOfFace * pObject->meshes[0].faces.size();
+  const auto indecesSize = sizeOfFace * pObject->meshes[0].faces.size();
   auto pIndexBuffer = createIndexBuffer(m_pEngine, pObject->meshes[0].faces);
   pIndexBuffer->setBuffer(
     *m_pEngine,
@@ -109,82 +186,8 @@ CObjectLoader::loadObject(const IRenderer::Object& object)
   m_pVertexBufferManager->addBuffer(std::move(pVertexBuffer));
   m_pIndexBufferManager->addBuffer(std::move(pIndexBuffer));
 
-  m_idLastAddedObject = pRenderable->entityId().getId();
+  const auto entityOfLoadedObject = pRenderable->entityId().getId();
   m_renderables.push_back(std::move(pRenderable));
-}
 
-VertexBufferUnique
-CObjectLoader::createVertexBuffer(EngineShared pEngine,
-                                  const IRenderer::Vertices& vertices)
-{
-  using namespace filament;
-
-  const auto pVertexBuffer =
-    VertexBuffer::Builder()
-      .vertexCount(static_cast<uint32_t>(vertices.coords.size()))
-      .bufferCount(2)
-      .attribute(VertexAttribute::POSITION,
-                 kGeometryBufferIndex,
-                 VertexBuffer::AttributeType::FLOAT3,
-                 0,
-                 IRenderer::sizeOfCoord)
-      .attribute(VertexAttribute::COLOR,
-                 kColorBufferIndex,
-                 VertexBuffer::AttributeType::UBYTE4,
-                 0,
-                 IRenderer::sizeOfColor)
-      .normalized(VertexAttribute::COLOR)
-      .build(*pEngine);
-
-  return VertexBufferUnique(pVertexBuffer, FilamentComponentCleaner(pEngine));
-}
-
-IndexBufferUnique
-CObjectLoader::createIndexBuffer(EngineShared pEngine,
-                                 const IRenderer::Faces& faces)
-{
-  using namespace filament;
-
-  const auto pIndexBuffer =
-    IndexBuffer::Builder()
-      .indexCount(static_cast<uint32_t>(faces.size()) * 3)
-      .bufferType(IndexBuffer::IndexType::UINT)
-      .build(*pEngine);
-  return IndexBufferUnique(pIndexBuffer, FilamentComponentCleaner(pEngine));
-}
-
-EntityUnique
-CObjectLoader::createRenderable(EngineShared pEngine,
-                                filament::VertexBuffer* pVertexBuffer,
-                                filament::IndexBuffer* pIndexBuffer,
-                                const IRenderer::Faces& faces,
-                                uint32_t materialIndex)
-{
-  using namespace filament;
-
-  const auto pMaterialInstance =
-    m_materialManager.getMaterialInstance(materialIndex);
-  const auto renderable = utils::EntityManager::get().create();
-  const auto result = RenderableManager::Builder(1)
-                        .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                        .material(0, pMaterialInstance)
-                        .geometry(0,
-                                  RenderableManager::PrimitiveType::TRIANGLES,
-                                  pVertexBuffer,
-                                  pIndexBuffer,
-                                  0,
-                                  faces.size() * 3)
-                        .culling(false)
-                        .receiveShadows(true)
-                        .castShadows(true)
-                        .build(*pEngine, renderable);
-
-  return EntityUnique(new CEntity(renderable),
-                      FilamentComponentCleaner(pEngine));
-}
-
-std::optional<uint32_t>
-CObjectLoader::idLastLoadedObject() const
-{
-  return m_idLastAddedObject;
+  return entityOfLoadedObject;
 }

@@ -7,7 +7,6 @@
 #include "FilamentEngineFwd.h"
 #include "FilamentTypesFwd.h"
 
-#include <IRenderer/Object.h>
 #include <IRenderer/RenderConfig.h>
 
 namespace RendererFilament {

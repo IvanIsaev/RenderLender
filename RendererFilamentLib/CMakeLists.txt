@@ -40,6 +40,7 @@ set(SOURCES ${ROOT_SRC}/CFilamentRendererFacade.cpp
             ${ROOT_SRC}/CIndexBufferManager.cpp
             ${ROOT_SRC}/CLightManager.cpp
             ${ROOT_SRC}/CMaterialManager.cpp
+            ${ROOT_SRC}/CSceneLoader.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADER_DIRECTORY})
@@ -63,6 +64,8 @@ endforeach()
 include(FindVulkan)
 find_package(Vulkan REQUIRED COMPONENTS shaderc_combined)
 target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE RLMathLib)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS _ITERATOR_DEBUG_LEVEL=0
