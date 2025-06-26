@@ -21,7 +21,8 @@ namespace {
 enum BufferIndexes
 {
   kGeometryBufferIndex,
-  kColorBufferIndex
+  kColorBufferIndex,
+  kTBNBufferIndex
 };
 }
 
@@ -55,12 +56,18 @@ CObjectLoader::createVertexBuffer(EngineShared pEngine,
   const auto pVertexBuffer =
     VertexBuffer::Builder()
       .vertexCount(static_cast<uint32_t>(vertices.coords.size()))
-      .bufferCount(2)
+      .bufferCount(3)
       .attribute(VertexAttribute::POSITION,
                  kGeometryBufferIndex,
                  VertexBuffer::AttributeType::FLOAT3,
                  0,
                  sizeOfCoord)
+      .attribute(VertexAttribute::TANGENTS,
+                 kTBNBufferIndex,
+                 VertexBuffer::AttributeType::SHORT4,
+                 0,
+                 sizeOfTBN)
+      .normalized(VertexAttribute::TANGENTS)
       .attribute(VertexAttribute::COLOR,
                  kColorBufferIndex,
                  VertexBuffer::AttributeType::UBYTE4,
@@ -127,6 +134,7 @@ CObjectLoader::load(const Object& object)
     sizeOfCoord * pObject->meshes[0].vertices.coords.size();
   const auto colorSize =
     sizeOfColor * pObject->meshes[0].vertices.colors.size();
+  const auto TBNSize = sizeOfTBN + pObject->meshes[0].vertices.tbn.size();
 
   auto pVertexBuffer =
     createVertexBuffer(m_pEngine, pObject->meshes[0].vertices);
@@ -144,6 +152,11 @@ CObjectLoader::load(const Object& object)
       pObject->meshes[0].vertices.colors.data(),
       colorSize,
       nullptr)); // TODO: realize callback to release memory
+  pVertexBuffer->setBufferAt(
+    *m_pEngine,
+    kTBNBufferIndex,
+    VertexBuffer::BufferDescriptor(
+      pObject->meshes[0].vertices.tbn.data(), TBNSize, nullptr));
 
   const auto indecesSize = sizeOfFace * pObject->meshes[0].faces.size();
   auto pIndexBuffer = createIndexBuffer(m_pEngine, pObject->meshes[0].faces);

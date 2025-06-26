@@ -25,6 +25,9 @@ struct Mesh
 {
   std::vector<Face> faces;
   std::vector<MathTypes::FloatPoint3D> vertices;
+  std::vector<MathTypes::FloatPoint3D> normals;
+  std::vector<MathTypes::FloatPoint3D> tangents;
+  std::vector<MathTypes::FloatPoint3D> bitangents;
 };
 
 struct Scene

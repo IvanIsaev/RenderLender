@@ -1,6 +1,5 @@
 #include "Conversation.h"
 
-
 filament::math::mat4f
 RendererFilament::convertToFilamentMat(const MathTypes::FloatMatrix4x4& mat)
 {
@@ -10,4 +9,10 @@ RendererFilament::convertToFilamentMat(const MathTypes::FloatMatrix4x4& mat)
                                 mat.a[2][1], mat.a[2][2], mat.a[2][3],
                                 mat.a[3][0], mat.a[3][1], mat.a[3][2],
                                 mat.a[3][3] };
+}
+
+filament::math::float3
+RendererFilament::convertToFilamentVector(const MathTypes::FloatPoint3D& pt)
+{
+  return filament::math::float3{ pt.x(), pt.y(), pt.z() };
 }

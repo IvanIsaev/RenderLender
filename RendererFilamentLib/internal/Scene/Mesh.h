@@ -5,13 +5,16 @@
 #include <MathTypes/Matrix.h>
 #include <MathTypes/Point.h>
 
+#include <math/vec4.h>
+
 #include <vector>
 
 namespace RendererFilament {
 struct Face;
 
+using Point3D = MathTypes::FloatPoint3D;
+using TBN = filament::math::short4; // Tangent bitangent normal represented as quaternion
 using Faces = std::vector<Face>;
-using Coord = MathTypes::FloatPoint3D;
 
 struct Face
 {
@@ -22,8 +25,9 @@ struct Face
 
 struct Vertices
 {
-  std::vector<Coord> coords;
+  std::vector<Point3D> coords;
   std::vector<Color> colors;
+  std::vector<TBN> tbn;
 };
 
 struct Mesh
@@ -33,6 +37,7 @@ struct Mesh
   uint32_t materialIndex;
 };
 
-static constexpr auto sizeOfCoord = sizeof(Coord);
+static constexpr auto sizeOfCoord = sizeof(Point3D);
 static constexpr auto sizeOfFace = sizeof(Face);
+static constexpr auto sizeOfTBN = sizeof(TBN);
 }

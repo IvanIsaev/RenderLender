@@ -1,12 +1,16 @@
 #include "CSceneLoader.h"
 
 #include "CMaterialManager.h"
+#include "Conversation.h"
 
 #include "Scene/Object.h"
 
 #include <RLMath/Matrix.h>
 
 #include <Scene/Scene.h>
+
+#include <math/mat3.h>
+#include <math/norm.h>
 
 #include <optional>
 #include <vector>
@@ -21,6 +25,8 @@ loadRecursively(const Scene::Node& node,
                 const std::function<uint32_t(const Object&)>& load,
                 std::optional<uint32_t> parentId = std::nullopt)
 {
+  using namespace filament::math;
+
   auto idOfParent = std::optional<uint32_t>{};
 
   if (node.meshesIds.size()) {
@@ -41,8 +47,24 @@ loadRecursively(const Scene::Node& node,
                                        face.verticesId.at(2) });
       }
 
-      for (const auto& vertex : mesh.vertices) {
-        filamentMesh.vertices.coords.emplace_back(vertex);
+      for (auto vertexIndex = size_t{}; vertexIndex < mesh.vertices.size();
+           ++vertexIndex) {
+        filamentMesh.vertices.coords.emplace_back(
+          mesh.vertices.at(vertexIndex));
+
+         const auto normal =
+          convertToFilamentVector(mesh.normals.at(vertexIndex));
+        const auto tangent =
+          convertToFilamentVector(mesh.tangents.at(vertexIndex));
+         const auto bitangent =
+           convertToFilamentVector(mesh.bitangents.at(vertexIndex));
+
+        const auto tbn = filament::math::packSnorm16(
+           mat3f::packTangentFrame(
+             filament::math::mat3f{ tangent, bitangent, normal })
+             .xyzw);
+
+        filamentMesh.vertices.tbn.push_back(tbn);
         filamentMesh.vertices.colors.emplace_back(0x000000ff);
       }
 

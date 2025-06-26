@@ -28,7 +28,7 @@ importFaces(std::span<aiFace> aiFaces)
 }
 
 std::vector<MathTypes::FloatPoint3D>
-importVertices(std::span<aiVector3D> aiVertices)
+importVectors3D(std::span<aiVector3D> aiVertices)
 {
   const auto toVertex = [](const auto& aiVertex) {
     return MathTypes::FloatPoint3D(aiVertex.x, aiVertex.y, aiVertex.z);
@@ -46,7 +46,13 @@ importMeshes(std::span<aiMesh*> aiMeshes)
 
     mesh.faces = importFaces({ pAiMesh->mFaces, pAiMesh->mNumFaces });
     mesh.vertices =
-      importVertices({ pAiMesh->mVertices, pAiMesh->mNumVertices });
+      importVectors3D({ pAiMesh->mVertices, pAiMesh->mNumVertices });
+    mesh.normals =
+      importVectors3D({ pAiMesh->mNormals, pAiMesh->mNumVertices });
+    mesh.tangents =
+      importVectors3D({ pAiMesh->mTangents, pAiMesh->mNumVertices });
+    mesh.bitangents =
+      importVectors3D({ pAiMesh->mBitangents, pAiMesh->mNumVertices });
 
     return mesh;
   };
